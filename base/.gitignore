@@ -1,0 +1,12 @@
+# Carpeta que genera "npm run build" (se crea sola al publicar)
+dist/
+# Archivos internos de Astro
+.astro/
+# Dependencias (se descargan con "npm install")
+node_modules/
+# Variables de entorno privadas
+.env
+.env.*
+# Sistema
+.DS_Store
+npm-debug.log*

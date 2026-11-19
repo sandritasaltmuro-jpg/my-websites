@@ -1,0 +1,40 @@
+/* =========================================================
+   tokens.css — BASE COMÚN (igual en todas las webs)
+   Escalas de espaciado, tipografía, radios y anchos.
+   Los colores y fuentes NO van aquí: van en el tema (src/themes/).
+   Valores provisionales: se definen en la semana 2.
+   ========================================================= */
+:root {
+  /* Espaciado (múltiplos de 4px) */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-7: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+  --space-9: 6rem;     /* 96px */
+
+  /* Escala tipográfica (fluida: crece un poco en pantallas grandes) */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --text-3xl: clamp(2rem, 1.5rem + 2vw, 3rem);
+  --text-4xl: clamp(2.5rem, 1.8rem + 3vw, 4rem);
+
+  /* Interlineado */
+  --leading-tight: 1.15;
+  --leading-normal: 1.6;
+
+  /* Anchos */
+  --container: 72rem;   /* ancho máximo del contenido */
+  --measure: 65ch;      /* ancho máximo de un párrafo legible */
+
+  /* Movimiento */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}

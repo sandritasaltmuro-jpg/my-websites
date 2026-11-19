@@ -1,0 +1,62 @@
+/* =========================================================
+   base.css — Estilos generales comunes a todas las webs.
+   Usa las variables de tokens.css y del tema activo.
+   ========================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-4);
+}
+
+p { margin: 0 0 var(--space-4); max-width: var(--measure); }
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--color-link); }
+
+/* Contenedor centrado */
+.container {
+  width: min(100% - 2 * var(--space-5), var(--container));
+  margin-inline: auto;
+}
+
+/* Foco visible para navegar con teclado */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+/* Enlace "Saltar al contenido" (accesibilidad): solo aparece al tabular */
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-text);
+  color: var(--color-bg);
+  z-index: 100;
+}
+.skip-link:focus { top: var(--space-4); }
+
+/* Respeta "reducir movimiento" del sistema */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

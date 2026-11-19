@@ -1,0 +1,24 @@
+/* =========================================================
+   Tema: NEUTRO (provisional, sirve de punto de partida)
+   Un tema solo define personalidad: colores, fuentes y radios.
+   Para crear otro: copia este archivo (ej. belleza.css) y cambia los valores.
+   ========================================================= */
+:root {
+  /* Colores — comprobar siempre contraste mínimo 4.5:1 para texto */
+  --color-bg: #faf9f7;
+  --color-surface: #ffffff;
+  --color-text: #1c1b19;
+  --color-muted: #5f5b55;
+  --color-primary: #1c1b19;      /* botones principales */
+  --color-on-primary: #ffffff;   /* texto sobre el botón principal */
+  --color-link: #1c1b19;
+  --color-border: #e4e0da;
+  --color-focus: #2563eb;
+
+  /* Tipografía (fuentes del sistema hasta elegir las del tema) */
+  --font-heading: Georgia, 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Forma */
+  --radius: 8px;
+}

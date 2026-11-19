@@ -1,0 +1,36 @@
+---
+/**
+ * SEO.astro
+ * Etiquetas del <head> para buscadores y para compartir en redes / WhatsApp.
+ * Cada página le pasa su propio título y descripción (nunca repetirlos entre páginas).
+ *
+ * Uso (normalmente a través de BaseLayout):
+ *   <SEO title="Peluquería Lola · Chamberí" description="Cortes y color en Chamberí..." />
+ */
+interface Props {
+  title: string;          // 50–60 caracteres aprox.
+  description: string;    // 140–160 caracteres aprox.
+  image?: string;         // Imagen para compartir (1200x630), ruta dentro de /public
+  noindex?: boolean;      // true en páginas que no deben salir en Google (ej. "gracias")
+}
+
+const { title, description, image, noindex = false } = Astro.props;
+
+// URL canónica y de la imagen, calculadas con el dominio de astro.config.mjs
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = image ? new URL(image, Astro.site) : null;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Open Graph: cómo se ve el enlace al compartirlo -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="es_ES" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+<meta name="twitter:card" content="summary_large_image" />

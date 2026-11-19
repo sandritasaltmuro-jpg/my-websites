@@ -1,0 +1,43 @@
+---
+/**
+ * BaseLayout.astro
+ * Estructura común a todas las páginas: <html>, <head> con SEO, estilos base y tema.
+ *
+ * Uso en una página:
+ *   <BaseLayout title="..." description="...">
+ *     ...contenido de la página...
+ *   </BaseLayout>
+ */
+import SEO from '../components/SEO.astro';
+import '../styles/tokens.css';
+import '../styles/base.css';
+// Tema activo: cambia esta línea para usar otro (ver src/themes/README.md)
+import '../themes/neutro.css';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <SEO {...props} />
+    <!-- Datos estructurados de negocio local: se añadirán en la semana 2 -->
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <main id="contenido">
+      <slot />
+    </main>
+  </body>
+</html>
