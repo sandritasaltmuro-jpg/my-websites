@@ -7,7 +7,8 @@ La estructura, el espaciado y los componentes son los mismos para todos (están 
 - `neutro.css`: punto de partida (provisional)
 - `belleza.css`: semana 3
 - `cafeteria.css`: semana 4
-- `gym-mixto.css` y `gym-girls.css`: semana 5
+- `gym-mixto.css`: semana 5
+- `gym-girls.css`: concepto "Brava Club" (hecho)
 
 ## Cambiar el tema activo
 En `src/layouts/BaseLayout.astro`, cambia esta línea:

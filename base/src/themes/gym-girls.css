@@ -1,0 +1,44 @@
+/* =========================================================
+   Tema: GYM GIRLS · concepto "Brava Club"
+   Editorial deportivo: monocromo rojo, crema y negro, actitud.
+   Referencias: claude/concepto-gym-girls.md (proyecto) y tablero de FigJam.
+
+   Reglas de contraste (comprobadas):
+   - Crema sobre rojo: 4,8 → apto para texto.
+   - Texto sobre naranja: SIEMPRE negro (crema sobre naranja no pasa).
+   - Negro sobre rojo: solo titulares grandes (3,4).
+   ========================================================= */
+
+/* Fuentes: Anton (marca y titulares), Archivo (subtítulos anchos y cuerpo),
+   Space Mono (microtextos tipo ficha). Se cargan desde Google Fonts en el layout del concepto. */
+
+:root {
+  /* Paleta de marca */
+  --brava-red: #c81e1e;
+  --brava-red-deep: #7a0f0c;
+  --brava-orange: #f05a28;
+  --brava-black: #140807;
+  --brava-cream: #f5eadb;
+
+  /* Roles (los usa la base común) */
+  --color-bg: var(--brava-black);
+  --color-surface: var(--brava-red-deep);
+  --color-text: var(--brava-cream);
+  --color-muted: #d9c7b4;
+  --color-primary: var(--brava-red);       /* botones principales */
+  --color-on-primary: var(--brava-cream);  /* texto sobre el botón */
+  --color-accent: var(--brava-orange);     /* acentos; texto encima en negro */
+  --color-on-accent: var(--brava-black);
+  --color-link: var(--brava-cream);
+  --color-border: rgba(245, 234, 219, 0.2);
+  --color-focus: var(--brava-orange);
+
+  /* Tipografía */
+  --font-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;  /* marca gigante, vertical */
+  --font-heading: 'Archivo', system-ui, sans-serif;               /* usar en ancho expandido */
+  --font-body: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;             /* coordenadas, horarios */
+
+  /* Forma: rectos y contundentes */
+  --radius: 0;
+}
