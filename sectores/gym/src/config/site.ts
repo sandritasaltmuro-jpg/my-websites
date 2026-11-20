@@ -73,7 +73,7 @@ export const site = {
   social: {
     instagram: 'https://www.instagram.com/',
     facebook: '',
-    tiktok: '',
+    tiktok: 'https://www.tiktok.com/', // concepto: perfil genérico
     googleMaps: '',
   },
 

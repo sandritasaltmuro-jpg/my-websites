@@ -64,11 +64,11 @@ Contenido completo, textos, precios, imágenes y reglas: **`docs/brava-concepto.
 - **Orden de la página**: Pantalla de carga → Hero → Manifiesto → Clases (+ bloque Hot) → El estudio → Wellness → Horario → Tarifas → Equipo → You + Brava → **Preguntas frecuentes + Pie en un único bloque rojo intenso**.
 
 ### Estado del kit gym (20 nov 2026)
-- Hecho: tema `brava.css`, `site.ts` con datos ficticios, `Preloader`, animaciones GSAP, `Footer` + `DotWordmark`, `Header` transparente (todo en mono, sin botón), `Hero`, `Manifesto`, `Clases` (+ bloque Hot), `Estudio`, `Wellness`, `Horario`, `Tarifas`, `Equipo` y `Comunidad` (You + Brava). Fotos con `FilmImage`; datos en `src/data/` (clases, wellness, horario, tarifas, equipo, comunidad); carruseles con `src/scripts/carousel.ts`.
+- Hecho: tema `brava.css`, `site.ts` con datos ficticios, `Preloader`, animaciones GSAP, `Footer` + `DotWordmark`, `Header` transparente (todo en mono, sin botón), `Hero`, `Manifesto`, `Clases` (+ bloque Hot), `Estudio`, `Wellness`, `Horario`, `Tarifas`, `Equipo`, `Comunidad` (You + Brava) y `Footer` con preguntas frecuentes por categorías + llamada final (solo texto) + BRAVA en puntos (FAQPage en JSON-LD; `showFaq={false}` en legales y 404). Fotos con `FilmImage`; datos en `src/data/` (clases, wellness, horario, tarifas, equipo, comunidad, faq); carruseles con `src/scripts/carousel.ts`.
 - Fondos (decisión 20 nov): rojos intensos y naranjas, no borgoña. `--gradient-section` (seguro para texto crema) y `--gradient-glow` / degradados radiales con el naranja SIEMPRE detrás de fotos o titulares grandes, nunca bajo texto pequeño.
 - Titulares H1/H2: variable `--font-title` (ahora Inter Tight, estilo suizo; provisional). Anton queda solo en el carrusel del Hero y el pie.
 - **Sin llamadas a la acción por ahora** (decisión 20 nov): Brava es una landing de escaparate; los botones de reserva y el flotante de WhatsApp están quitados (`showWhatsAppFloat` desactivado por defecto) hasta definir cómo serán.
-- Pendiente, en este orden: FAQ unido al pie (rehacer `Footer` para que incluya FAQ por categorías y llamada final) → llamadas a la acción (cuando se definan) → revisión final.
+- Pendiente: llamadas a la acción (cuando se definan) → tipografía definitiva de titulares → revisión final (móvil, contraste, checklist de `docs/seo-bases.md`) → pasar `brava-hero` a `main`.
 - Imágenes: van en `sectores/gym/src/assets/brava/` con nombre numerado y descriptivo (lista y números en `docs/brava-concepto.md`, Parte 3). Ej.: `01-hero-sentadilla.png`, `05-clase-pole.png`, `13-ugc-espejo.png`, `22-estudio-fuerza.png`.
 
 ## Publicación

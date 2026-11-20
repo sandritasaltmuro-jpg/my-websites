@@ -1,49 +1,132 @@
 ---
 /**
- * Footer.astro (kit gym) — Pie sobre rojo intenso con la marca en puntos animados.
- * Debajo: datos del negocio (NAP) en texto, horario, menú, redes y legales.
- * Todo sale de site.ts. Contraste: crema sobre rojo intenso = 7,3.
+ * Footer.astro (kit gym · Brava) — Preguntas frecuentes + pie en UN SOLO BLOQUE
+ * sobre rojo intenso (ref. FAQ con categorías).
+ * ---------------------------------------------------------------------------
+ * De arriba abajo:
+ *   1. Preguntas frecuentes (H2): categorías a la izquierda y preguntas
+ *      desplegables a la derecha (<details>, sin JavaScript). En escritorio, con
+ *      JavaScript, las categorías funcionan como pestañas; en móvil o sin JS se
+ *      ven todas, una debajo de otra. Debajo: "¿Más dudas?" con el email.
+ *   2. Llamada final (solo texto por ahora; el botón se definirá más adelante).
+ *   3. BRAVA en puntos animados (DotWordmark).
+ *   4. Columnas en mono: Menú · El club · Contacto · Únete a la comunidad.
+ *   5. Línea final: ©, "Proyecto conceptual" y legales.
+ *
+ * Datos: site.ts (NAP, horario, redes, menú) y src/data/faq.ts.
+ * Las preguntas se marcan para Google como FAQPage (son visibles).
+ * Uso: <Footer />  ·  <Footer showFaq={false} /> en páginas legales.
+ * Contraste: crema sobre rojo intenso (7,3:1).
  */
 import { site } from '../config/site';
 import { fullAddress, phoneUrl, emailUrl, whatsappUrl } from '../utils/contact';
+import { faq } from '../data/faq';
 import DotWordmark from './DotWordmark.astro';
-import Icon from './Icon.astro';
 
 interface Props {
   /** Palabra gigante en puntos (por defecto, la primera palabra del nombre) */
   word?: string;
   /** Muestra la etiqueta de proyecto conceptual (solo en webs de portfolio) */
   concept?: boolean;
+  /** Preguntas frecuentes y llamada final (no en páginas legales) */
+  showFaq?: boolean;
 }
-const { word = site.name.split(' ')[0].toUpperCase(), concept = site.noindex } = Astro.props;
+const { word = site.name.split(' ')[0].toUpperCase(), concept = site.noindex, showFaq = true } = Astro.props;
 
-const socials = [
-  { name: 'Instagram', icon: 'instagram', url: site.social.instagram },
-  { name: 'Facebook', icon: 'facebook', url: site.social.facebook },
-  { name: 'TikTok', icon: 'tiktok', url: site.social.tiktok },
-].filter((s) => s.url) as { name: string; icon: 'instagram' | 'facebook' | 'tiktok'; url: string }[];
+const newTab = ' (se abre en una pestaña nueva)';
+const comunidad = [
+  { name: 'Instagram', url: site.social.instagram },
+  { name: 'TikTok', url: site.social.tiktok },
+  { name: 'WhatsApp', url: whatsappUrl() },
+].filter((s) => s.url);
+
+// Datos para Google: FAQPage con todas las preguntas visibles
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.flatMap((c) =>
+    c.items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } }))
+  ),
+};
 
 const year = new Date().getFullYear();
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
 <footer id="contacto" class="gym-footer">
+  {showFaq && (
+    <>
+      <section class="faq" aria-labelledby="faq-title" data-faq>
+        <div class="faq__labels" data-reveal="up">
+          <p>09 · Preguntas frecuentes</p>
+          <p aria-hidden="true">{faq.reduce((n, c) => n + c.items.length, 0)} respuestas</p>
+        </div>
+
+        <div class="faq__layout">
+          <div class="faq__side">
+            <h2 id="faq-title" class="faq__title" data-reveal="lines">Lo que nos preguntáis.</h2>
+            <!-- Categorías como pestañas (solo escritorio con JavaScript) -->
+            <div class="faq__cats" role="group" aria-label="Categorías de preguntas">
+              {faq.map((c, i) => (
+                <button type="button" class="faq__cat" aria-controls={`faq-${i}`} aria-pressed={i === 0 ? 'true' : 'false'} data-faq-cat={i}>
+                  <span aria-hidden="true">{pad(i + 1)}</span> {c.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div class="faq__groups">
+            {faq.map((c, i) => (
+              <div id={`faq-${i}`} class:list={['faq__group', { 'is-active': i === 0 }]}>
+                <h3 class="faq__group-name">{c.name}</h3>
+                {c.items.map((item) => (
+                  <details class="faq__item">
+                    <summary>
+                      <span>{item.q}</span>
+                      <span class="faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <p>{item.a}</p>
+                  </details>
+                ))}
+              </div>
+            ))}
+            <p class="faq__more">
+              ¿Más dudas? Escríbenos a <a href={emailUrl()}>{site.contact.email}</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Llamada final: solo texto por ahora -->
+      <div class="final" data-reveal="up">
+        <p class="final__title">Tu primera clase va por nuestra cuenta.</p>
+        <p class="final__text">Elige disciplina, escríbenos y te reservamos sitio. Quédate después a la sauna.</p>
+      </div>
+
+      <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    </>
+  )}
+
   <div class="gym-footer__mark">
     <DotWordmark word={word} />
   </div>
 
-  <div class="container gym-footer__grid">
+  <div class="gym-footer__grid">
+    <nav aria-label="Pie de página">
+      <p class="gym-footer__label">Menú</p>
+      <ul role="list">
+        {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
     <div>
-      <p class="gym-footer__label">Visítanos</p>
+      <p class="gym-footer__label">El club</p>
       <address>
-        <strong>{site.name}</strong><br />
+        {site.name}<br />
         {fullAddress()}<br />
         {site.address.directions}
       </address>
-    </div>
-
-    <div>
-      <p class="gym-footer__label">Horario</p>
-      <ul role="list">
+      <ul role="list" class="gym-footer__hours">
         {site.hours.map((h) => <li>{h.label} · {h.opens}–{h.closes}</li>)}
         {site.closedLabel && <li>{site.closedLabel}</li>}
       </ul>
@@ -52,39 +135,25 @@ const year = new Date().getFullYear();
     <div>
       <p class="gym-footer__label">Contacto</p>
       <ul role="list">
-        <li>
-          <a href={whatsappUrl()} target="_blank" rel="noopener">
-            WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span>
-          </a>
-        </li>
+        <li><a href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp<span class="sr-only">{newTab}</span></a></li>
         <li><a href={phoneUrl()}>{site.contact.phone}</a></li>
         <li><a href={emailUrl()}>{site.contact.email}</a></li>
       </ul>
-      {socials.length > 0 && (
-        <ul class="gym-footer__social" role="list">
-          {socials.map((s) => (
-            <li>
-              <a href={s.url} target="_blank" rel="noopener">
-                <Icon name={s.icon} />
-                <span class="sr-only">{s.name} (se abre en una pestaña nueva)</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
 
-    <nav aria-label="Pie de página">
-      <p class="gym-footer__label">Brava</p>
+    <div>
+      <p class="gym-footer__label">Únete a la comunidad</p>
       <ul role="list">
-        {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        {comunidad.map((s) => (
+          <li><a href={s.url} target="_blank" rel="noopener">{s.name}<span class="sr-only">{newTab}</span></a></li>
+        ))}
       </ul>
-    </nav>
+    </div>
   </div>
 
-  <div class="container gym-footer__bottom">
-    <p>© {year} {site.name} · Todos los derechos reservados</p>
-    {concept && <p class="gym-footer__concept">Proyecto conceptual · no es un negocio real</p>}
+  <div class="gym-footer__bottom">
+    <p>© {year} {site.name}</p>
+    {concept && <p>Proyecto conceptual · no es un negocio real</p>}
     <ul role="list">
       <li><a href="/aviso-legal/">Aviso legal</a></li>
       <li><a href="/privacidad/">Privacidad</a></li>
@@ -92,56 +161,243 @@ const year = new Date().getFullYear();
   </div>
 </footer>
 
+<script>
+  // Categorías como pestañas (solo tienen efecto visual en escritorio; ver CSS)
+  document.querySelectorAll<HTMLElement>('[data-faq]').forEach((root) => {
+    const cats = [...root.querySelectorAll<HTMLButtonElement>('[data-faq-cat]')];
+    const groups = [...root.querySelectorAll<HTMLElement>('.faq__group')];
+    cats.forEach((c, i) =>
+      c.addEventListener('click', () => {
+        cats.forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+        groups.forEach((g, j) => g.classList.toggle('is-active', j === i));
+      })
+    );
+  });
+</script>
+
 <style>
   .gym-footer {
-    /* Rojo intenso de la tipografía de las referencias; texto crema (7,3:1) */
-    background: var(--brava-red-intense, #961d13);
-    color: var(--brava-cream, #fbedda);
-    padding-block: var(--space-7) var(--space-5);
-    font-size: var(--text-sm);
+    /* Un solo bloque rojo intenso, con un resplandor naranja suave arriba a la derecha */
+    background: var(--gradient-glow), var(--brava-red-intense);
+    color: var(--brava-cream);
+    padding-top: var(--section-space);
+    padding-bottom: var(--space-5);
     overflow: hidden;
   }
-  .gym-footer a { color: inherit; text-underline-offset: 0.2em; }
+  .gym-footer a { color: inherit; text-underline-offset: 0.25em; }
   .gym-footer ul { list-style: none; margin: 0; padding: 0; }
-  .gym-footer li { margin-bottom: var(--space-2); }
 
-  .gym-footer__mark { padding-inline: var(--space-4); margin-bottom: var(--space-7); }
+  /* Textos en mono (etiquetas, columnas y línea final) */
+  .faq__labels p,
+  .faq__cat,
+  .gym-footer__label,
+  .gym-footer__grid,
+  .gym-footer__bottom {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* =========================================================
+     1. PREGUNTAS FRECUENTES
+     ========================================================= */
+  .faq { margin-inline: var(--space-5); }
+  .faq__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .faq__labels p { margin: 0; }
+
+  .faq__layout {
+    display: grid;
+    gap: var(--space-7);
+    margin-top: var(--space-7);
+  }
+  .faq__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.2rem + 4.5vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .faq__cats { display: none; }
+
+  .faq__group + .faq__group { margin-top: var(--space-7); }
+  .faq__group-name {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Pregunta desplegable: línea fina, texto y un "+" que gira a "×" */
+  .faq__item { border-top: 1px solid var(--color-border); }
+  .faq__item:last-of-type { border-bottom: 1px solid var(--color-border); }
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 3.5rem;
+    padding-block: var(--space-3);
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__icon {
+    position: relative;
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    transition: transform var(--duration-base) var(--ease);
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+  }
+  .faq__icon::after { transform: rotate(90deg); }
+  .faq__item[open] .faq__icon { transform: rotate(45deg); }
+  .faq__item p {
+    margin: 0;
+    padding-bottom: var(--space-4);
+    max-width: 56ch;
+  }
+  .faq__more {
+    margin: var(--space-6) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  /* =========================================================
+     2. LLAMADA FINAL
+     ========================================================= */
+  .final {
+    margin: var(--space-9) var(--space-5) var(--space-7);
+    text-align: center;
+  }
+  .final__title {
+    margin: 0 auto var(--space-4);
+    max-width: 18ch;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 1rem + 5vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .final__text {
+    margin: 0 auto;
+    max-width: 40ch;
+    font-size: var(--text-lg);
+  }
+
+  /* =========================================================
+     3–5. MARCA EN PUNTOS, COLUMNAS Y LÍNEA FINAL
+     ========================================================= */
+  .gym-footer__mark { padding-inline: var(--space-4); margin-bottom: var(--space-6); }
 
   .gym-footer__grid {
     display: grid;
-    gap: var(--space-6);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--space-6) var(--space-5);
+    margin-inline: var(--space-5);
     padding-block: var(--space-6);
-    border-top: 1px solid rgba(251, 237, 218, 0.25);
+    border-top: 1px solid var(--color-border);
+    line-height: var(--leading-normal);
   }
-  .gym-footer__label {
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: var(--space-3);
-    opacity: 0.85;
+  .gym-footer__label { margin: 0 0 var(--space-3); opacity: 0.85; }
+  .gym-footer__grid li a,
+  .gym-footer__bottom a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
   }
-  address { font-style: normal; line-height: 1.7; }
-  address strong { font-family: var(--font-display); font-weight: 400; font-size: var(--text-lg); letter-spacing: 0.02em; }
-
-  .gym-footer__social { display: flex; gap: var(--space-1); margin-top: var(--space-3) !important; }
-  .gym-footer__social li { margin: 0; }
-  .gym-footer__social a { display: inline-grid; place-items: center; width: var(--tap); height: var(--tap); }
+  address { font-style: normal; }
+  .gym-footer__hours { margin-top: var(--space-3) !important; }
 
   .gym-footer__bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-3) var(--space-5);
-    padding-top: var(--space-5);
-    border-top: 1px solid rgba(251, 237, 218, 0.25);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    gap: var(--space-2) var(--space-5);
+    margin-inline: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
   }
   .gym-footer__bottom p { margin: 0; }
   .gym-footer__bottom ul { display: flex; gap: var(--space-5); }
-  .gym-footer__bottom li { margin: 0; }
-  .gym-footer__concept { opacity: 0.85; }
+
+  /* En móvil sobra la etiqueta de la derecha: no cabe en una línea */
+  @media (max-width: 47.99rem) {
+    .faq__labels p:last-child { display: none; }
+  }
+  @media (min-width: 30rem) {
+    .gym-footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .gym-footer__grid a { overflow-wrap: anywhere; } /* el email nunca invade la columna de al lado */
+
+  /* ---- Tableta ---- */
+  @media (min-width: 48rem) {
+    .faq,
+    .final,
+    .gym-footer__grid,
+    .gym-footer__bottom { margin-inline: var(--space-7); }
+    .gym-footer__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+
+  /* ---- Escritorio: categorías a la izquierda (pestañas), preguntas a la derecha ---- */
+  @media (min-width: 64rem) {
+    .faq__layout {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-9);
+      align-items: start;
+    }
+    .faq__side { position: sticky; top: calc(var(--header-h) + var(--space-5)); }
+
+    :global(.js) .faq__cats {
+      display: flex;
+      flex-direction: column;
+      margin-top: var(--space-7);
+      border-top: 1px solid var(--color-border);
+    }
+    .faq__cat {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      min-height: 3rem;
+      padding: 0;
+      border: 0;
+      border-bottom: 1px solid var(--color-border);
+      background: transparent;
+      color: var(--color-text);
+      text-align: left;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity var(--duration-base) var(--ease), padding var(--duration-base) var(--ease);
+    }
+    .faq__cat:hover { opacity: 1; }
+    .faq__cat[aria-pressed='true'] { opacity: 1; padding-left: var(--space-3); }
+
+    /* Con JavaScript, solo se ve la categoría elegida (su nombre ya está a la izquierda) */
+    :global(.js) .faq__group:not(.is-active) { display: none; }
+    :global(.js) .faq__group + .faq__group { margin-top: 0; }
+    :global(.js) .faq__group-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  }
 </style>

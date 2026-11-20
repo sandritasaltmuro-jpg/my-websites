@@ -32,11 +32,13 @@ interface Props {
   /** Botón flotante de WhatsApp. DESACTIVADO por defecto: Brava es una landing de escaparate
    *  y las llamadas a la acción se definirán más adelante (decisión 20 nov) */
   showWhatsAppFloat?: boolean;
+  /** Preguntas frecuentes y llamada final en el pie. Desactivar en páginas legales */
+  showFaq?: boolean;
   /** Pantalla de carga (solo primera visita). Desactivar en páginas legales */
   showPreloader?: boolean;
 }
 
-const { showWhatsAppFloat = false, showPreloader = true, ...seo } = Astro.props;
+const { showWhatsAppFloat = false, showPreloader = true, showFaq = true, ...seo } = Astro.props;
 ---
 
 <!doctype html>
@@ -70,7 +72,7 @@ const { showWhatsAppFloat = false, showPreloader = true, ...seo } = Astro.props;
     <main id="contenido">
       <slot />
     </main>
-    <Footer />
+    <Footer showFaq={showFaq} />
     {showWhatsAppFloat && <WhatsAppFloat />}
     <script>
       // Entradas animadas con GSAP (ver src/scripts/animations.ts)
