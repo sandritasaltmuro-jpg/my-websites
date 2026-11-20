@@ -37,7 +37,7 @@
   --color-surface-alt: var(--brava-red);      /* crema sobre rojo Brava: 5,0 */
   --color-border: rgba(251, 237, 218, 0.18);
   --color-text: var(--brava-cream);
-  --color-muted: #e2c9b3;                   /* crema apagada: 7,5 sobre borgoña */
+  --color-muted: #e2c9b3;                   /* crema apagada: 7,5 sobre borgoña · 5,3 sobre rojo intenso · NO sobre rojo Brava (3,6): ahí, crema */
   --color-link: var(--brava-cream);
   --color-primary: var(--brava-red);        /* botones principales */
   --color-on-primary: var(--brava-cream);
