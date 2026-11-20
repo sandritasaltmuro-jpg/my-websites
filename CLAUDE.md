@@ -64,9 +64,9 @@ Contenido completo, textos, precios, imágenes y reglas: **`docs/brava-concepto.
 - **Orden de la página**: Pantalla de carga → Hero → Manifiesto → Clases (+ bloque Hot) → El estudio → Wellness → Horario → Tarifas → Equipo → You + Brava → **Preguntas frecuentes + Pie en un único bloque rojo intenso**.
 
 ### Estado del kit gym (20 nov 2026)
-- Hecho: tema `brava.css`, `site.ts` con datos ficticios, `Preloader`, animaciones GSAP, `Footer` + `DotWordmark`.
-- Página `index.astro`: solo un titular provisional (todo lo genérico se eliminó a propósito).
-- Pendiente, en este orden: Hero → Manifiesto → Clases + Hot → El estudio → Wellness → Horario → Tarifas → Equipo → You + Brava → FAQ unido al pie (rehacer `Footer` para que incluya FAQ por categorías y llamada final) → nueva cabecera (`Header`) y botón flotante de WhatsApp con la estética Brava → revisión final.
+- Hecho: tema `brava.css`, `site.ts` con datos ficticios, `Preloader`, animaciones GSAP, `Footer` + `DotWordmark`, `Hero` (con `FilmImage` para todas las fotos y las clases en `src/data/clases.ts`).
+- Página `index.astro`: de momento solo el Hero.
+- Pendiente, en este orden: Manifiesto → Clases + Hot → El estudio → Wellness → Horario → Tarifas → Equipo → You + Brava → FAQ unido al pie (rehacer `Footer` para que incluya FAQ por categorías y llamada final) → nueva cabecera (`Header`) y botón flotante de WhatsApp con la estética Brava → revisión final.
 - Imágenes: van en `sectores/gym/src/assets/brava/` con nombre numerado y descriptivo (lista y números en `docs/brava-concepto.md`, Parte 3). Ej.: `01-hero-sentadilla.png`, `05-clase-pole.png`, `13-ugc-espejo.png`, `22-estudio-fuerza.png`.
 
 ## Publicación
