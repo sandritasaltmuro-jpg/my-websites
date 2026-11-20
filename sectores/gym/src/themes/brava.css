@@ -11,7 +11,7 @@
    - Crema sobre ladrillo (#D24C30): 3,8   → SOLO titulares grandes
    - Negro sobre ámbar (#D3802E): 6,1      → texto sobre ámbar SIEMPRE negro
    - Crema sobre ámbar: 2,6                → NO usar
-   - Crema sobre negro cálido: 16,2
+   - Crema sobre negro cálido: 16,2 (el negro ya no se usa de fondo)
    ========================================================= */
 
 /* Fuentes: Anton (marca y titulares), Archivo (subtítulos anchos y cuerpo),
@@ -30,12 +30,14 @@
   --brava-cream: #fbedda;      /* crema de la tipografía gigante */
 
   /* ---- Roles (los usan los componentes) ---- */
-  --color-bg: var(--brava-black);
-  --color-surface: var(--brava-burgundy);
-  --color-surface-alt: var(--brava-red);
+  /* SIN FONDOS NEGROS (decisión 20 nov): todo en la gama de rojos.
+     El negro cálido solo se usa para texto sobre ámbar. */
+  --color-bg: var(--brava-burgundy);          /* crema sobre borgoña: 10,4 */
+  --color-surface: var(--brava-red-intense);  /* crema sobre rojo intenso: 7,3 */
+  --color-surface-alt: var(--brava-red);      /* crema sobre rojo Brava: 5,0 */
   --color-border: rgba(251, 237, 218, 0.18);
   --color-text: var(--brava-cream);
-  --color-muted: #e2c9b3;                   /* crema apagada: 11,8 sobre negro */
+  --color-muted: #e2c9b3;                   /* crema apagada: 7,5 sobre borgoña */
   --color-link: var(--brava-cream);
   --color-primary: var(--brava-red);        /* botones principales */
   --color-on-primary: var(--brava-cream);
