@@ -1,0 +1,36 @@
+---
+/**
+ * Aviso legal — PLANTILLA. Las webs de negocios en España deben identificar al titular (LSSI).
+ * Revisar y completar con los datos reales del cliente. No es asesoramiento legal:
+ * si el cliente tiene dudas, que lo valide con su gestoría o abogado.
+ */
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../config/site';
+import { fullAddress } from '../utils/contact';
+---
+
+<LegalLayout
+  title={`Aviso legal | ${site.name}`}
+  description={`Aviso legal e información del titular de la web de ${site.name}.`}
+  heading="Aviso legal"
+>
+  <h2>Titular de la web</h2>
+  <p>
+    Titular: {site.legal.owner}<br />
+    NIF/CIF: {site.legal.taxId}<br />
+    Domicilio: {fullAddress()}<br />
+    Email: {site.contact.email} · Teléfono: {site.contact.phone}
+  </p>
+
+  <h2>Uso de la web</h2>
+  <p>
+    Esta web informa sobre los servicios de {site.name}. Quien la visita se compromete a hacer un uso
+    adecuado de sus contenidos.
+  </p>
+
+  <h2>Propiedad intelectual</h2>
+  <p>
+    Los textos, imágenes y diseño de esta web pertenecen a su titular o se usan con permiso.
+    No se permite su reproducción sin autorización.
+  </p>
+</LegalLayout>

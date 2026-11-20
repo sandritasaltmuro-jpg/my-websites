@@ -1,0 +1,38 @@
+---
+/**
+ * Política de privacidad — PLANTILLA (RGPD).
+ * La web base no usa cookies propias ni formularios: el contacto es por WhatsApp,
+ * teléfono o email, y el mapa solo se carga si la persona lo pide.
+ * Si se añade analítica con cookies, formularios o Google Ads, hay que ampliar este texto
+ * y añadir un aviso de cookies. No es asesoramiento legal.
+ */
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../config/site';
+---
+
+<LegalLayout
+  title={`Política de privacidad | ${site.name}`}
+  description={`Cómo trata ${site.name} los datos de las personas que contactan a través de su web.`}
+  heading="Política de privacidad"
+>
+  <h2>Responsable</h2>
+  <p>{site.legal.owner} ({site.legal.taxId}), contacto: {site.contact.email}.</p>
+
+  <h2>Qué datos tratamos</h2>
+  <p>
+    Solo los que nos facilitas al escribirnos por WhatsApp, teléfono o email, para responder a tu consulta
+    y, si lo pides, gestionar tu cita o pedido.
+  </p>
+
+  <h2>Cookies y servicios externos</h2>
+  <p>
+    Esta web no usa cookies propias. El mapa de Google Maps solo se carga si pulsas "Ver mapa"; en ese momento
+    Google puede instalar sus propias cookies.
+  </p>
+
+  <h2>Tus derechos</h2>
+  <p>
+    Puedes pedir acceder, corregir o borrar tus datos escribiendo a {site.contact.email}. También puedes
+    reclamar ante la Agencia Española de Protección de Datos (aepd.es).
+  </p>
+</LegalLayout>

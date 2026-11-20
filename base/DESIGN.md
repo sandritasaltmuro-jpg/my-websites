@@ -1,6 +1,6 @@
 # DESIGN.md · Base común
 
-Sistema de diseño de la plantilla madre. Todas las webs (conceptos y clientes) parten de aquí.
+Infraestructura común de todas las webs. Cada kit de sector nace copiando esta carpeta.
 **Base común** = estructura, espaciado, componentes, accesibilidad y SEO (igual en todas).
 **Tema** = personalidad: colores, fuentes y radios (cambia por sector y por cliente).
 
@@ -8,10 +8,10 @@ Sistema de diseño de la plantilla madre. Todas las webs (conceptos y clientes) 
 
 ## 1. Cómo se monta una web nueva
 
-1. Copiar `base/` con el nombre del proyecto.
-2. Rellenar `src/config/site.ts` (datos del negocio, dominio, horario, WhatsApp, tipo de negocio para Google).
-3. Elegir o crear el tema en `src/themes/` y activarlo en `src/layouts/BaseLayout.astro`.
-4. Editar `src/pages/index.astro`: textos, imágenes y secciones que hagan falta.
+1. **Kit de sector nuevo:** copiar `base/` a `sectores/<sector>/` y diseñar allí sus componentes y temas.
+2. **Cliente nuevo:** copiar el kit de su sector a un repositorio propio.
+3. Rellenar `src/config/site.ts` (datos del negocio, dominio, horario, WhatsApp, tipo de negocio para Google).
+4. Ajustar o crear su tema y adaptar textos e imágenes.
 5. Pasar el checklist de `claude/seo-bases.md` antes de publicar.
 
 ---
@@ -53,30 +53,22 @@ Tipografía del tema: `--font-display` (titular del hero), `--font-heading`, `--
 
 ---
 
-## 4. Componentes (src/components/)
+## 4. Qué hay en la base (infraestructura, sin diseño)
 
-| Componente | Qué es | Datos |
+| Pieza | Qué hace | Datos |
 |---|---|---|
-| `Header` | Cabecera fija: nombre, menú, botón WhatsApp. Menú móvil accesible (Escape cierra) | `site.nav` |
-| `Hero` | Primera pantalla con el **único H1**. Imagen opcional con carga prioritaria | props |
-| `Section` | Envoltorio con id, H2, etiqueta y entradilla. `alt` = fondo alterno, `narrow` = estrecho | props |
-| `Services` | Tarjetas con H3, precio y duración | `items` |
-| `About` | Texto + imagen opcional | slot |
-| `Testimonials` | Opiniones reales (sin marcar valoraciones para Google) | `items` |
-| `HoursLocation` | Horario, dirección y mapa que carga **solo al pulsar** (velocidad y RGPD) | `site.hours`, `site.address` |
-| `FAQ` | Preguntas desplegables sin JavaScript + datos FAQPage | `items` |
-| `Contact` | WhatsApp como acción principal; teléfono y email en texto | `site.contact` |
-| `Footer` | NAP en texto, horario, redes y enlaces legales | `site` |
-| `WhatsAppFloat` | Botón flotante de WhatsApp | `site.contact` |
-| `Button` | Botón-enlace: `primary`, `secondary`, `whatsapp` | props |
-| `Icon` | Iconos SVG en línea, decorativos | `name` |
+| `config/site.ts` | Datos del negocio: un solo sitio para NAP, horario, WhatsApp, redes, tipo de negocio | — |
+| `utils/contact.ts` | Enlaces de WhatsApp, teléfono, email y mapa | `site` |
 | `SEO` | Title, description, canonical, Open Graph, noindex | props / `site` |
-| `LocalBusinessSchema` | JSON-LD del negocio | `site` |
+| `LocalBusinessSchema` | Datos estructurados del negocio (JSON-LD) | `site` |
+| `Icon` | Iconos SVG en línea, decorativos | `name` |
+| `BaseLayout` | `<head>`, saltar al contenido, `<main>`; slots `header`, `footer` y `head` | props |
+| `LegalLayout` | Textos legales | props |
+| Páginas | `404`, `aviso-legal`, `privacidad`, `robots.txt` automático | `site` |
+| Estilos | `tokens.css` (escalas) y `base.css` (reset, accesibilidad) | — |
 
-Layouts: `BaseLayout` (todas las páginas) y `LegalLayout` (textos legales).
-Páginas incluidas: inicio de demostración, `404`, `aviso-legal`, `privacidad`, `robots.txt` (automático).
-
----
+**Los componentes visuales no están aquí:** cada kit de sector (`sectores/gym`…) diseña los suyos
+(hero, tarifas, horario de clases, carta…) para lo que necesita ese tipo de negocio.
 
 ## 5. Reglas de contenido
 
@@ -96,4 +88,3 @@ enlaces externos avisados para lectores de pantalla, `prefers-reduced-motion` re
 
 - Fuentes propias por tema: alojarlas en la web (paquetes `@fontsource`), máximo 2 familias.
 - Formulario de contacto (Web3Forms o similar) cuando un cliente lo pida.
-- Componente de galería, si varios sectores lo necesitan.

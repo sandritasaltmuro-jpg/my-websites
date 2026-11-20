@@ -1,0 +1,68 @@
+/* =========================================================
+   tokens.css — BASE COMÚN (igual en todas las webs)
+   Escalas de espaciado, tipografía, radios, sombras y anchos.
+   Los colores y las fuentes NO van aquí: van en el tema (src/themes/).
+   ========================================================= */
+:root {
+  /* ---- Espaciado (múltiplos de 4px) ---- */
+  --space-1: 0.25rem;  /* 4px */
+  --space-2: 0.5rem;   /* 8px */
+  --space-3: 0.75rem;  /* 12px */
+  --space-4: 1rem;     /* 16px */
+  --space-5: 1.5rem;   /* 24px */
+  --space-6: 2rem;     /* 32px */
+  --space-7: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+  --space-9: 6rem;     /* 96px */
+
+  /* Separación vertical entre secciones (más aire en pantallas grandes) */
+  --section-space: clamp(var(--space-8), 8vw, var(--space-9));
+
+  /* ---- Escala tipográfica (fluida) ---- */
+  --text-xs: 0.8125rem;                                   /* 13px: microtextos */
+  --text-sm: 0.875rem;                                    /* 14px */
+  --text-base: 1rem;                                      /* 16px: cuerpo (nunca menos en móvil) */
+  --text-lg: 1.125rem;                                    /* 18px: entradillas */
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);      /* H3 */
+  --text-2xl: clamp(1.625rem, 1.3rem + 1.4vw, 2.25rem);   /* H2 */
+  --text-3xl: clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem);     /* H1 interior */
+  --text-4xl: clamp(2.75rem, 1.8rem + 4.4vw, 5rem);       /* H1 del hero */
+
+  /* Interlineado */
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.6;
+
+  /* Pesos (máximo 3 por web) */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  /* ---- Anchos ---- */
+  --container: 72rem;   /* 1152px: ancho máximo del contenido */
+  --container-narrow: 46rem;
+  --measure: 65ch;      /* ancho máximo de un párrafo legible */
+
+  /* ---- Forma (el tema puede sobrescribir --radius) ---- */
+  --radius: 8px;
+  --radius-sm: calc(var(--radius) / 2);
+  --radius-pill: 999px;
+
+  /* ---- Sombras (suaves, solo para elevar) ---- */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 0.08);
+
+  /* ---- Tamaño mínimo táctil ---- */
+  --tap: 44px;
+
+  /* ---- Movimiento ---- */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 600ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Capas ---- */
+  --z-header: 50;
+  --z-floating: 60;
+  --z-skip: 100;
+}

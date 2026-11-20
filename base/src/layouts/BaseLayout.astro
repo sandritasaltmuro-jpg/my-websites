@@ -1,21 +1,20 @@
 ---
 /**
- * BaseLayout.astro — Estructura común a todas las páginas:
- * <head> con SEO y datos para Google, header, contenido, footer y botón de WhatsApp.
+ * BaseLayout.astro — Estructura común e INVISIBLE de todas las webs:
+ * <head> con SEO y datos para Google, enlace "Saltar al contenido" y <main>.
  *
- * Uso en una página:
- *   <BaseLayout title="Peluquería en Chamberí | Estudio Lúa" description="...">
+ * La cabecera y el pie los pone cada kit de sector (diseño propio) con los slots:
+ *   <BaseLayout title="..." description="...">
+ *     <Header slot="header" />
  *     ...secciones...
+ *     <Footer slot="footer" />
  *   </BaseLayout>
  */
 import SEO from '../components/SEO.astro';
 import LocalBusinessSchema from '../components/LocalBusinessSchema.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import '../styles/tokens.css';
 import '../styles/base.css';
-// Tema activo: cambia esta línea para usar otro (ver src/themes/README.md)
+// Tema activo (en la base: neutro). Cada kit de sector importa el suyo.
 import '../themes/neutro.css';
 
 interface Props {
@@ -23,11 +22,9 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
-  /** Ocultar el botón flotante de WhatsApp (por ejemplo, en páginas legales) */
-  showWhatsAppFloat?: boolean;
 }
 
-const { showWhatsAppFloat = true, ...seo } = Astro.props;
+const seo = Astro.props;
 ---
 
 <!doctype html>
@@ -38,16 +35,15 @@ const { showWhatsAppFloat = true, ...seo } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <SEO {...seo} />
     <LocalBusinessSchema />
-    <!-- Espacio para fuentes del tema u otras etiquetas de una página concreta -->
+    <!-- Fuentes del tema u otras etiquetas de una página concreta -->
     <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
-    <Header />
+    <slot name="header" />
     <main id="contenido">
       <slot />
     </main>
-    <Footer />
-    {showWhatsAppFloat && <WhatsAppFloat />}
+    <slot name="footer" />
   </body>
 </html>

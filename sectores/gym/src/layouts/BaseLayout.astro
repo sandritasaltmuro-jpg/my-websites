@@ -1,0 +1,53 @@
+---
+/**
+ * BaseLayout.astro — Estructura común a todas las páginas:
+ * <head> con SEO y datos para Google, header, contenido, footer y botón de WhatsApp.
+ *
+ * Uso en una página:
+ *   <BaseLayout title="Peluquería en Chamberí | Estudio Lúa" description="...">
+ *     ...secciones...
+ *   </BaseLayout>
+ */
+import SEO from '../components/SEO.astro';
+import LocalBusinessSchema from '../components/LocalBusinessSchema.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import '../styles/tokens.css';
+import '../styles/base.css';
+// Tema activo: cambia esta línea para usar otro (ver src/themes/README.md)
+import '../themes/neutro.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  /** Ocultar el botón flotante de WhatsApp (por ejemplo, en páginas legales) */
+  showWhatsAppFloat?: boolean;
+}
+
+const { showWhatsAppFloat = true, ...seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <SEO {...seo} />
+    <LocalBusinessSchema />
+    <!-- Espacio para fuentes del tema u otras etiquetas de una página concreta -->
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    {showWhatsAppFloat && <WhatsAppFloat />}
+  </body>
+</html>

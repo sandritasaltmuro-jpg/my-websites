@@ -1,23 +1,9 @@
-# Temas por sector
+# Temas
 
-Cada archivo `.css` de esta carpeta es un tema: colores, fuentes y radios.
-La estructura, el espaciado y los componentes son los mismos para todos (están en `src/styles/` y `src/components/`).
+En la base solo hay `neutro.css`: los valores mínimos para que la infraestructura se vea correcta.
 
-## Temas previstos
-- `neutro.css`: punto de partida (provisional)
-- `belleza.css`: semana 3
-- `cafeteria.css`: semana 4
-- `gym-mixto.css`: semana 5
-- `gym-girls.css`: concepto "Brava Club" (hecho)
+Los temas de verdad viven en cada kit de sector:
+- `sectores/gym/src/themes/brava.css`: concepto Brava Club
+- (próximamente) gym mixto, belleza, cafetería
 
-## Cambiar el tema activo
-En `src/layouts/BaseLayout.astro`, cambia esta línea:
-
-```js
-import '../themes/neutro.css';
-```
-
-## Crear un tema nuevo
-1. Copia `neutro.css` con el nombre nuevo.
-2. Cambia los valores de las variables (no añadas variables nuevas sin añadirlas a todos los temas).
-3. Comprueba el contraste del texto (mínimo 4.5:1).
+Todo tema debe definir las mismas variables que `neutro.css` (ver `base/DESIGN.md`).

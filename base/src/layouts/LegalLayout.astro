@@ -1,7 +1,7 @@
 ---
 /**
- * LegalLayout.astro — Plantilla sencilla para textos legales (aviso legal, privacidad, cookies).
- * Texto estrecho y legible, sin botón flotante.
+ * LegalLayout.astro — Plantilla sencilla para textos legales (aviso legal, privacidad).
+ * Texto estrecho y legible. Cada kit puede añadir su cabecera y pie con los slots.
  */
 import BaseLayout from './BaseLayout.astro';
 
@@ -13,11 +13,14 @@ interface Props {
 const { title, description, heading } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} showWhatsAppFloat={false}>
+<BaseLayout title={title} description={description}>
+  <Fragment slot="header"><slot name="header" /></Fragment>
   <article class="container container--narrow legal">
+    <p><a href="/">← Volver al inicio</a></p>
     <h1>{heading}</h1>
     <slot />
   </article>
+  <Fragment slot="footer"><slot name="footer" /></Fragment>
 </BaseLayout>
 
 <style>

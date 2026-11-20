@@ -3,16 +3,19 @@
 Todo el trabajo del negocio de webs en un solo repositorio.
 
 ```
-base/                 Plantilla madre en Astro (base común + temas por sector)
-conceptos/
-  belleza/            Concepto: peluquería / estética / cosmética (semana 3)
-  cafeteria/          Concepto: cafetería o restaurante pequeño (semana 4)
-  gym-mixto/          Concepto: gimnasio, tonos neutros, público mixto (semana 5)
-  gym-girls/          Concepto: gimnasio femenino, naranja/rojo (semana 5)
-portfolio/            Web propia con los conceptos (semana 6)
+base/                 Infraestructura común e invisible (Astro): SEO, datos del negocio (site.ts),
+                      datos para Google, accesibilidad, páginas legales, 404, robots y sitemap.
+sectores/
+  gym/                Kit gym: componentes de gimnasio + temas (Brava Club, gym mixto) + webs de concepto
+  belleza/            Kit belleza (próximamente)
+  cafeteria/          Kit cafetería (próximamente)
+portfolio/            Web propia con los conceptos
 ```
 
 ## Cómo se trabaja
-- Cada concepto nace copiando `base/` dentro de su carpeta y cambiando el tema.
-- Las webs de **clientes reales** van en repositorios aparte (uno por cliente).
-- Instrucciones para arrancar la base: ver `base/README.md`.
+- **Un kit por sector.** Los componentes visuales (hero, tarifas, horario de clases…) se diseñan para ese sector,
+  no genéricos. Un kit nace copiando `base/`.
+- **Un cliente nuevo de un sector** = copiar el kit de ese sector a un repositorio propio, rellenar `site.ts`,
+  crear o ajustar su tema y adaptar textos e imágenes.
+- **Mejoras en la base** (SEO, accesibilidad): se hacen en `base/` y se copian a los kits.
+- Publicación en Vercel: un proyecto por carpeta (Root Directory = la carpeta).
