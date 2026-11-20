@@ -10,6 +10,8 @@ sectores/
   belleza/            Kit belleza (próximamente)
   cafeteria/          Kit cafetería (próximamente)
 portfolio/            Web propia con los conceptos
+docs/                 Documentos de referencia (concepto Brava, bases SEO)
+CLAUDE.md             Guía para Claude Code: decisiones, convenciones y estado
 ```
 
 ## Cómo se trabaja
