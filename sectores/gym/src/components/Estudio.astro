@@ -2,20 +2,23 @@
 /**
  * Estudio.astro (kit gym · Brava) — Sección "El estudio" (ref. "Welcome to the club").
  * ---------------------------------------------------------------------------
- * - Arriba: etiquetas en mono y título centrado "Bienvenida al club" (H2).
- * - Carrusel a todo el ancho con las salas: foto horizontal grande con efecto
- *   película y una línea en mono encima (sala, datos). Se ve un trozo de la
- *   siguiente foto para invitar a deslizar.
- * - Abajo: flechas redondas, contador "01 / 04" y puntos.
+ * Fotos de las salas a PANTALLA COMPLETA. La sección se queda fija mientras se
+ * hace scroll y cada sala entra SUBIENDO DESDE ABAJO, tapando a la anterior
+ * (la de debajo se desplaza un poco hacia arriba, efecto profundidad).
+ * Encima, fijos: etiquetas en mono, título centrado "Bienvenida al club" (H2),
+ * contador "01 / 04" y barra de progreso. Cada foto lleva su línea en mono.
  *
- * Datos: la lista `salas` de este archivo (foto, nombre y línea en mono).
- * Carrusel: scroll nativo + src/scripts/carousel.ts (sin JS se desliza igual).
- * Uso: <Estudio />
+ * Cómo funciona: la sección mide (nº de salas × alto de pantalla); dentro, un
+ * marco `position: sticky` ocupa la pantalla y GSAP + ScrollTrigger mueve las
+ * fotos según el scroll (scrub). Solo se activa con JavaScript y sin "reducir
+ * movimiento" (clase .is-pinned); si no, las fotos se ven una debajo de otra,
+ * cada una a pantalla completa.
  *
- * Fondo: rojo intenso con resplandor naranja (--gradient-glow), texto crema (7,3:1).
+ * Datos: la lista `salas` de este archivo. Uso: <Estudio />
+ * Contraste: título crema sobre una sombra cálida encima de las fotos; las líneas
+ * en mono llevan fondo rojo intenso (7,3:1).
  */
 import FilmImage from './FilmImage.astro';
-import Icon from './Icon.astro';
 
 const salas = [
   { photo: '22', name: 'Sala de fuerza', line: 'Racks · mancuernas · trineo de Hyrox', alt: 'Sala de fuerza de Brava Club con mancuernas cromadas y paredes rojas' },
@@ -24,70 +27,159 @@ const salas = [
   { photo: '25', name: 'Zona wellness', line: 'Sauna de infrarrojos · agua fría', alt: 'Zona wellness con sauna de infrarrojos y bañera de agua fría' },
 ];
 const pad = (n: number) => String(n).padStart(2, '0');
+const captionHtml = (i: number) =>
+  `<span>${pad(i + 1)}</span> <strong>${salas[i].name}</strong> <span>${salas[i].line}</span>`;
+// Líneas de todas las salas para el script (la capa fija cambia de una a otra)
+const captions = salas.map((_, i) => captionHtml(i));
 ---
 
-<section id="estudio" class="estudio" aria-labelledby="estudio-title">
-  <div class="estudio__head">
-    <div class="estudio__labels" data-reveal="up">
-      <p>03 · El estudio</p>
-      <p aria-hidden="true">Malasaña, Madrid</p>
-    </div>
-    <h2 id="estudio-title" class="estudio__title" data-reveal="up">Bienvenida al club</h2>
-  </div>
-
-  <div class="estudio__carousel" role="region" aria-roledescription="carrusel" aria-label="Las salas del estudio" data-carousel>
-    <ul class="estudio__track" role="list" data-carousel-track>
+<section id="estudio" class="estudio" aria-labelledby="estudio-title" style={`--count: ${salas.length}`} data-stack data-captions={JSON.stringify(captions)}>
+  <div class="estudio__frame">
+    <ul class="estudio__slides" role="list">
       {salas.map((s, i) => (
-        <li class="estudio__slide" role="group" aria-roledescription="diapositiva" aria-label={`${i + 1} de ${salas.length}: ${s.name}`}>
-          <FilmImage num={s.photo} alt={s.alt} sizes="(min-width: 64rem) 78vw, 88vw" widths={[640, 960, 1400, 2000]} />
+        <li class="estudio__slide" data-stack-slide>
+          <FilmImage num={s.photo} alt={s.alt} sizes="100vw" widths={[800, 1200, 1600, 2400]} eager />
           <p class="estudio__caption">
             <span aria-hidden="true">{pad(i + 1)}</span>
             <strong>{s.name}</strong>
-            <span class="estudio__line">{s.line}</span>
+            <span>{s.line}</span>
           </p>
         </li>
       ))}
     </ul>
 
-    <div class="estudio__controls" data-carousel-controls>
-      <button type="button" class="estudio__arrow estudio__arrow--prev" data-carousel-prev aria-label="Sala anterior">
-        <Icon name="arrow" size={20} />
-      </button>
-      <p class="estudio__count" aria-hidden="true" data-carousel-count>01 / {pad(salas.length)}</p>
-      <button type="button" class="estudio__arrow" data-carousel-next aria-label="Sala siguiente">
-        <Icon name="arrow" size={20} />
-      </button>
-    </div>
-    <div class="estudio__dots" data-carousel-dots>
-      {salas.map((s, i) => (
-        <button type="button" class="estudio__dot" aria-label={`Ver ${s.name}`} aria-current={i === 0 ? 'true' : undefined}></button>
-      ))}
+    <div class="estudio__shade" aria-hidden="true"></div>
+
+    <!-- Capa fija encima de las fotos -->
+    <div class="estudio__overlay">
+      <div class="estudio__labels">
+        <p>03 · El estudio</p>
+        <p aria-hidden="true">Malasaña, Madrid</p>
+      </div>
+      <h2 id="estudio-title" class="estudio__title">Bienvenida al club</h2>
+      <div class="estudio__meta" aria-hidden="true">
+        <!-- Línea de la sala visible (con animación; sin ella, cada foto lleva la suya) -->
+        <p class="estudio__caption estudio__caption--live" data-stack-caption set:html={captionHtml(0)} />
+        <div class="estudio__counter">
+          <p class="estudio__count" data-stack-count>01 / {pad(salas.length)}</p>
+          <div class="estudio__progress"><span data-stack-progress></span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <script>
-  import { initCarousels } from '../scripts/carousel';
-  initCarousels();
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  document.querySelectorAll<HTMLElement>('[data-stack]').forEach((root) => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-stack-slide]')];
+    const count = root.querySelector<HTMLElement>('[data-stack-count]');
+    const bar = root.querySelector<HTMLElement>('[data-stack-progress]');
+    const caption = root.querySelector<HTMLElement>('[data-stack-caption]');
+    const captions: string[] = JSON.parse(root.dataset.captions ?? '[]');
+    let current = 0;
+    if (reduce || slides.length < 2) return; // se quedan una debajo de otra
+
+    root.classList.add('is-pinned');
+    // Todas menos la primera esperan abajo, fuera del marco
+    gsap.set(slides.slice(1), { yPercent: 100 });
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'none', duration: 1 },
+      scrollTrigger: {
+        trigger: root,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.6, // sigue al scroll con un poco de suavidad
+        onUpdate(self) {
+          const i = Math.min(slides.length - 1, Math.round(self.progress * (slides.length - 1)));
+          if (i !== current) {
+            current = i;
+            if (count) count.textContent = `${pad(i + 1)} / ${pad(slides.length)}`;
+            if (caption && captions[i]) caption.innerHTML = captions[i];
+          }
+          bar?.style.setProperty('--progress', String(self.progress));
+        },
+      },
+    });
+
+    slides.slice(1).forEach((slide, i) => {
+      // La nueva sube desde abajo…
+      tl.to(slide, { yPercent: 0 }, i);
+      // …y la de debajo se va un poco hacia arriba y se oscurece (profundidad)
+      tl.to(slides[i], { yPercent: -18, filter: 'brightness(0.55)' }, i);
+    });
+  });
 </script>
 
 <style>
   .estudio {
-    padding-block: var(--section-space);
-    background: var(--gradient-glow), var(--brava-red-intense);
+    position: relative;
+    background: var(--brava-red-intense);
     color: var(--color-text);
   }
 
-  .estudio__head {
-    margin: 0 var(--space-5) var(--space-7);
-    text-align: center;
+  /* ---- Sin animación (sin JS o "reducir movimiento"): fotos una debajo de otra ---- */
+  .estudio__frame { position: relative; }
+  .estudio__slides { margin: 0; padding: 0; list-style: none; }
+  .estudio__slide {
+    position: relative;
+    height: 100svh;
+    min-height: 32rem;
+    overflow: hidden;
+  }
+  .estudio__slide :global(.film) { position: absolute; inset: 0; }
+  .estudio__shade,
+  .estudio__overlay {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 100svh;
+    min-height: 32rem;
+    pointer-events: none;
+  }
+
+  /* ---- Con animación: la sección mide N pantallas y el marco se queda fijo ---- */
+  .estudio.is-pinned { height: calc(var(--count) * 100svh); }
+  .estudio.is-pinned .estudio__frame {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+  .estudio.is-pinned .estudio__slide {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    min-height: 0;
+    will-change: transform;
+  }
+  .estudio.is-pinned .estudio__shade,
+  .estudio.is-pinned .estudio__overlay { inset: 0; height: auto; min-height: 0; }
+
+  /* Sombra cálida: arriba (etiquetas), centro (título) y abajo (contador) */
+  .estudio__shade {
+    background:
+      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(28, 15, 12, 0.55) 0%, rgba(28, 15, 12, 0) 100%),
+      linear-gradient(180deg, rgba(28, 15, 12, 0.6) 0%, rgba(28, 15, 12, 0) 25%, rgba(28, 15, 12, 0) 70%, rgba(28, 15, 12, 0.55) 100%);
+  }
+
+  /* ---- Capa fija: etiquetas arriba, título en el centro, contador abajo ---- */
+  .estudio__overlay {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: calc(var(--header-h) + var(--space-3)) var(--space-5) var(--space-5);
   }
   .estudio__labels {
     display: flex;
     justify-content: space-between;
     gap: var(--space-4);
     padding-bottom: var(--space-3);
-    margin-bottom: var(--space-7);
     border-bottom: 1px solid var(--color-border);
   }
   .estudio__labels p,
@@ -99,110 +191,66 @@ const pad = (n: number) => String(n).padStart(2, '0');
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  /* Título en mono, centrado (como pide el concepto) */
   .estudio__title {
+    align-self: center;
+    justify-self: center;
     margin: 0;
     font-family: var(--font-mono);
     font-weight: 400;
-    font-size: clamp(1.5rem, 1rem + 2.4vw, 3rem);
+    font-size: clamp(1.75rem, 1rem + 3.2vw, 4rem);
     letter-spacing: 0.04em;
+    text-align: center;
     text-transform: uppercase;
   }
-
-  /* ---- Pista: diapositivas al 88 % del ancho (se asoma la siguiente) ---- */
-  .estudio__track {
+  .estudio__meta {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-4);
+  }
+  .estudio__counter {
+    display: flex;
+    align-items: center;
     gap: var(--space-4);
-    margin: 0;
-    padding: 0 var(--space-5);
-    list-style: none;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--space-5);
-    scrollbar-width: none;
+    margin-left: auto;
   }
-  .estudio__track::-webkit-scrollbar { display: none; }
-  .estudio__slide {
-    position: relative;
-    flex: 0 0 88%;
-    aspect-ratio: 4 / 3;
-    scroll-snap-align: start;
+  .estudio__progress {
+    width: min(12rem, 30vw);
+    height: 2px;
+    background: rgba(251, 237, 218, 0.3);
   }
-  .estudio__slide :global(.film) { width: 100%; height: 100%; }
+  .estudio__progress span {
+    display: block;
+    height: 100%;
+    background: var(--brava-cream);
+    transform-origin: left;
+    transform: scaleX(var(--progress, 0));
+  }
+  /* Sin animación no hay contador ni barra (las fotos se ven todas) */
+  .estudio:not(.is-pinned) .estudio__meta { visibility: hidden; }
 
-  /* Línea en mono sobre la foto, con fondo rojo intenso para que se lea siempre */
+  /* Línea en mono de cada sala, abajo a la izquierda, con fondo rojo intenso.
+     Con animación se usa la de la capa fija (encima de la sombra) y se ocultan las de las fotos */
+  .estudio.is-pinned .estudio__slide .estudio__caption { display: none; }
+  .estudio__caption--live { position: static !important; max-width: 100% !important; }
   .estudio__caption {
     position: absolute;
-    left: var(--space-3);
-    bottom: var(--space-3);
+    left: var(--space-5);
+    bottom: var(--space-5);
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1) var(--space-3);
-    max-width: calc(100% - 2 * var(--space-3));
+    max-width: calc(100% - 2 * var(--space-5) - 8rem);
     padding: var(--space-2) var(--space-3);
     background: var(--brava-red-intense);
   }
   .estudio__caption strong { font-weight: 400; }
 
-  /* ---- Controles: flechas redondas + contador; solo con JavaScript ---- */
-  .estudio__controls,
-  .estudio__dots { display: none; }
-  :global(.js) .estudio__controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-5);
-    margin-top: var(--space-6);
-  }
-  :global(.js) .estudio__dots { display: flex; justify-content: center; margin-top: var(--space-2); }
+  .estudio__caption--live :global(strong) { font-weight: 400; }
 
-  .estudio__arrow {
-    display: grid;
-    place-items: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    padding: 0;
-    border: 1px solid var(--color-border);
-    border-radius: 50%;
-    background: transparent;
-    color: var(--color-text);
-    cursor: pointer;
-    transition: border-color var(--duration-base) var(--ease), background-color var(--duration-base) var(--ease);
-  }
-  .estudio__arrow:hover { border-color: var(--color-text); background: rgba(251, 237, 218, 0.08); }
-  .estudio__arrow--prev :global(svg) { transform: scaleX(-1); }
-
-  .estudio__dot {
-    position: relative;
-    width: 28px;
-    height: var(--tap);
-    padding: 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-  }
-  .estudio__dot::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-text);
-    opacity: 0.35;
-    transform: translate(-50%, -50%);
-    transition: opacity var(--duration-base) var(--ease);
-  }
-  .estudio__dot[aria-current='true']::before { opacity: 1; }
-
-  /* ---- Tableta y escritorio ---- */
   @media (min-width: 48rem) {
-    .estudio__head { margin-inline: var(--space-7); }
-    .estudio__track { padding-inline: var(--space-7); scroll-padding-inline: var(--space-7); gap: var(--space-5); }
-    .estudio__caption { left: var(--space-5); bottom: var(--space-5); }
-  }
-  @media (min-width: 64rem) {
-    .estudio__slide { flex-basis: 78%; aspect-ratio: 16 / 9; }
+    .estudio__overlay { padding: calc(var(--header-h) + var(--space-4)) var(--space-7) var(--space-6); }
+    .estudio__caption { left: var(--space-7); bottom: var(--space-6); }
   }
 </style>
