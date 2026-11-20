@@ -52,6 +52,9 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
   --shadow-md: 0 4px 16px rgb(0 0 0 / 0.08);
 
+  /* ---- Altura de la cabecera fija ---- */
+  --header-h: 4rem;
+
   /* ---- Tamaño mínimo táctil ---- */
   --tap: 44px;
 

@@ -4,10 +4,10 @@
  * ---------------------------------------------------------------------------
  * Composición (ref. editorial "foto a sangre + rejilla de líneas finas"):
  *   - Foto 01 a pantalla completa con efecto película, degradado y grano.
- *   - Arriba: etiquetas en mono y el H1 enorme en Anton.
+ *   - Arriba: etiquetas en mono; en el centro, el H1 en Space Mono.
  *   - Abajo, dividido por líneas finas:
  *       izquierda → mini carrusel de clases (foto, nombre, "Reservar", flechas y puntos)
- *       derecha   → entradilla + botón principal "Reserva tu clase gratis" (WhatsApp)
+ *       derecha   → entradilla
  *
  * Datos: textos por props (con los del concepto por defecto), clases de src/data/clases.ts
  * y WhatsApp de site.ts. Sin JavaScript el carrusel se puede deslizar igualmente
@@ -17,7 +17,6 @@
  *
  * Contraste: el texto crema va siempre sobre los degradados oscuros de la foto
  * (--gradient-photo + --gradient-photo-bottom) o sobre borgoña/rojo intenso.
- * El botón principal es crema con texto rojo intenso (7,3:1).
  */
 import { site } from '../config/site';
 import { whatsappUrl } from '../utils/contact';
@@ -31,14 +30,12 @@ interface Props {
   /** Segunda parte del H1, en línea aparte */
   tagline?: string;
   intro?: string;
-  cta?: string;
 }
 
 const {
   title = 'Gimnasio para mujeres en Madrid.',
   tagline = 'Entrena brava.',
   intro = 'Hyrox, HIIT, barre, pole y clases hot en grupos reducidos. Y después, fisio, spa y sauna. Llegas como quieras; sales más fuerte.',
-  cta = 'Reserva tu clase gratis',
 } = Astro.props;
 
 // Coordenadas en formato de ficha (40°25′N 3°42′W) a partir de site.ts
@@ -137,11 +134,6 @@ const newTab = ' (se abre en una pestaña nueva)';
 
       <div class="hero__pitch">
         <p class="hero__intro" data-reveal="up">{intro}</p>
-        <a class="hero__cta" href={whatsappUrl()} target="_blank" rel="noopener" data-reveal="up">
-          <Icon name="whatsapp" />
-          <span>{cta}</span>
-          <span class="sr-only"> por WhatsApp{newTab}</span>
-        </a>
       </div>
     </div>
   </div>
@@ -186,10 +178,13 @@ const newTab = ' (se abre en una pestaña nueva)';
 
 <style>
   .hero {
+    /* Sombra suave en el centro, detrás del H1, para que se lea sobre las zonas claras de la foto */
+    --hero-center-shade: radial-gradient(ellipse 55% 38% at 50% 42%, rgba(28, 15, 12, 0.6) 0%, rgba(28, 15, 12, 0) 100%);
     position: relative;
     isolation: isolate;
-    /* Pantalla completa menos la cabecera fija (4rem) */
-    min-height: calc(100svh - 4rem);
+    /* Pantalla completa, por debajo de la cabecera transparente */
+    margin-top: calc(-1 * var(--header-h));
+    min-height: 100svh;
     display: flex;
     color: var(--color-text);
     background: var(--color-bg);
@@ -208,6 +203,7 @@ const newTab = ' (se abre en una pestaña nueva)';
      En móvil el titular ocupa todo el ancho: se añade sombra también arriba */
   .hero__shade {
     background:
+      var(--hero-center-shade),
       linear-gradient(180deg, rgba(28, 15, 12, 0.7) 0%, rgba(28, 15, 12, 0) 55%),
       var(--gradient-photo-bottom),
       var(--gradient-photo);
@@ -218,13 +214,15 @@ const newTab = ' (se abre en una pestaña nueva)';
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: var(--space-8);
     width: 100%;
   }
 
   /* ---- Arriba: etiquetas + H1 ---- */
   .hero__top {
-    padding: var(--space-5) var(--space-5) 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: calc(var(--header-h) + var(--space-3)) var(--space-5) 0;
   }
   .hero__labels {
     display: flex;
@@ -243,16 +241,18 @@ const newTab = ' (se abre en una pestaña nueva)';
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
+  /* H1 centrado en Space Mono (la tipografía de las etiquetas y la cabecera) */
   .hero__title {
-    margin: 0;
-    max-width: 14ch;
-    font-family: var(--font-display);
+    margin: auto;
+    padding-block: var(--space-6);
+    max-width: 22ch;
+    font-family: var(--font-mono);
     font-weight: 400;
-    /* 44px en móvil → 136px como máximo. Limitado también por la ALTURA de la
-       pantalla, para que el carrusel y el botón se vean sin hacer scroll */
-    font-size: clamp(2.75rem, min(1.2rem + 7.6vw, 11svh), 8.5rem);
-    line-height: 0.92;
-    letter-spacing: -0.005em;
+    /* 26px en móvil → 64px en pantallas grandes; limitado también por la altura */
+    font-size: clamp(1.625rem, min(0.9rem + 3.4vw, 7.5svh), 4rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-align: center;
     text-transform: uppercase;
     text-wrap: balance;
   }
@@ -397,7 +397,7 @@ const newTab = ' (se abre en una pestaña nueva)';
   }
   .hero__dot[aria-current='true']::before { opacity: 1; transform: translate(-50%, -50%) scale(1.25); }
 
-  /* ---- Entradilla y botón principal ---- */
+  /* ---- Entradilla ---- */
   .hero__pitch {
     display: flex;
     flex-direction: column;
@@ -411,30 +411,11 @@ const newTab = ' (se abre en una pestaña nueva)';
     font-size: var(--text-lg);
     line-height: var(--leading-snug);
   }
-  .hero__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-3);
-    min-height: 3.5rem;
-    padding: 0 var(--space-6);
-    flex-shrink: 0;
-    white-space: nowrap;
-    background: var(--brava-cream);
-    color: var(--brava-red-intense); /* 7,3:1 */
-    font-weight: var(--weight-bold);
-    font-size: var(--text-base);
-    text-decoration: none;
-    transition: background-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
-  }
-  .hero__cta:hover {
-    background: var(--color-accent);
-    color: var(--color-on-accent); /* negro sobre ámbar: 6,1:1 */
-  }
 
   /* ---- Tableta: más aire; abajo sigue apilado (en dos columnas no cabe el carrusel) ---- */
   @media (min-width: 48rem) {
-    .hero__shade { background: var(--gradient-photo-bottom), var(--gradient-photo); }
-    .hero__top { padding: var(--space-6) var(--space-7) 0; }
+    .hero__shade { background: var(--hero-center-shade), var(--gradient-photo-bottom), var(--gradient-photo); }
+    .hero__top { padding: calc(var(--header-h) + var(--space-4)) var(--space-7) 0; }
     .hero__classes { padding: var(--space-6) var(--space-7); }
     .hero__pitch {
       padding: var(--space-6) var(--space-7);

@@ -10,7 +10,7 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   /* Compensa el header fijo al saltar a #secciones */
-  scroll-padding-top: 5rem;
+  scroll-padding-top: calc(var(--header-h) + var(--space-4));
 }
 body {
   margin: 0;
@@ -21,6 +21,10 @@ body {
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
 }
+/* La cabecera es fija: el contenido empieza debajo de ella.
+   El Hero se mete por debajo (margen negativo) para que la cabecera quede sobre la foto. */
+main { padding-top: var(--header-h); }
+
 img, svg, video, iframe { max-width: 100%; display: block; }
 img { height: auto; }
 button, input, select, textarea { font: inherit; color: inherit; }
