@@ -1,0 +1,111 @@
+---
+/**
+ * Preloader.astro — Pantalla de carga en rojo intenso con contador gigante
+ * abajo a la izquierda (dígitos que ruedan, tipo odómetro). Inspirada en lusion.co.
+ *
+ * Va dentro de <body>, al principio. El script del <head> (PreloaderHead) decide
+ * ANTES de pintar si se muestra: solo primera visita y sin "reducir movimiento".
+ * Sin JavaScript no se muestra nunca (el contenido siempre está visible).
+ */
+import { site } from '../config/site';
+
+const digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+---
+
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="preloader__top">
+    <span>{site.name}</span>
+    <span>{site.address.city} · {site.address.postalCode}</span>
+  </div>
+
+  <div class="preloader__bar" data-bar><span></span></div>
+
+  <div class="preloader__bottom">
+    <div class="preloader__counter">
+      {[0, 1, 2].map(() => (
+        <span class="preloader__digit">
+          <span class="preloader__strip" data-digit>
+            {digits.map((d) => <span>{d}</span>)}
+          </span>
+        </span>
+      ))}
+    </div>
+    <span class="preloader__label">Cargando</span>
+  </div>
+</div>
+
+<script>
+  import { initPreloader } from '../scripts/preloader';
+  initPreloader();
+</script>
+
+<style>
+  .preloader {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--brava-red-intense, #961d13);
+    color: var(--brava-cream, #fbedda);
+    padding: var(--space-5);
+    flex-direction: column;
+    justify-content: space-between;
+    /* Salida: la cortina sube */
+    transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  /* Solo se muestra si el <head> lo ha decidido */
+  :global(html.is-loading) .preloader { display: flex; }
+  :global(html.is-loading) body { overflow: hidden; }
+  .preloader.is-leaving { transform: translateY(-100%); }
+
+  .preloader__top,
+  .preloader__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .preloader__top { display: flex; justify-content: space-between; }
+
+  /* Barrita central como en Lusion */
+  .preloader__bar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 96px;
+    height: 18px;
+    transform: translate(-50%, -50%);
+    background: rgba(251, 237, 218, 0.25);
+    --progress: 0;
+  }
+  .preloader__bar span {
+    display: block;
+    height: 100%;
+    background: currentColor;
+    transform-origin: left;
+    transform: scaleX(var(--progress));
+  }
+
+  .preloader__bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+
+  /* Contador gigante: cada dígito es una tira 0–9 que se desplaza */
+  .preloader__counter {
+    display: flex;
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 26vw, 22rem);
+    line-height: 1;
+    margin-bottom: -0.12em;
+  }
+  .preloader__digit {
+    display: block;
+    height: 1em;
+    overflow: hidden;
+  }
+  .preloader__strip {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .preloader__strip span { display: block; height: 1em; line-height: 1; }
+  .preloader__label { padding-bottom: 0.4em; }
+</style>

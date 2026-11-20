@@ -80,3 +80,11 @@ strong { font-weight: var(--weight-bold); }
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Entradas animadas (src/scripts/animations.ts): ocultos solo si hay JavaScript,
+   hasta que GSAP los anima. Con "reducir movimiento" o si algo falla, se ven. */
+.js [data-reveal] { visibility: hidden; }
+.reveal-done [data-reveal] { visibility: visible; }
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal] { visibility: visible; }
+}

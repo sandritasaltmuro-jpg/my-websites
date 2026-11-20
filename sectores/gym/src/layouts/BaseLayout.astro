@@ -13,6 +13,7 @@ import LocalBusinessSchema from '../components/LocalBusinessSchema.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import Preloader from '../components/Preloader.astro';
 // Fuentes del tema, alojadas en la propia web (sin peticiones a Google)
 import '@fontsource/anton';
 import '@fontsource-variable/archivo';
@@ -29,9 +30,11 @@ interface Props {
   noindex?: boolean;
   /** Ocultar el botón flotante de WhatsApp (por ejemplo, en páginas legales) */
   showWhatsAppFloat?: boolean;
+  /** Pantalla de carga (solo primera visita). Desactivar en páginas legales */
+  showPreloader?: boolean;
 }
 
-const { showWhatsAppFloat = true, ...seo } = Astro.props;
+const { showWhatsAppFloat = true, showPreloader = true, ...seo } = Astro.props;
 ---
 
 <!doctype html>
@@ -42,10 +45,24 @@ const { showWhatsAppFloat = true, ...seo } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <SEO {...seo} />
     <LocalBusinessSchema />
+    <!-- Decide ANTES de pintar: clase "js" y si se muestra la pantalla de carga
+         (solo primera visita de la sesión y sin "reducir movimiento") -->
+    <script is:inline define:vars={{ showPreloader }}>
+      (function () {
+        var h = document.documentElement;
+        h.classList.add('js');
+        try {
+          var seen = sessionStorage.getItem('brava-loaded');
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (showPreloader && !seen && !reduce) h.classList.add('is-loading');
+        } catch (e) {}
+      })();
+    </script>
     <!-- Espacio para fuentes del tema u otras etiquetas de una página concreta -->
     <slot name="head" />
   </head>
   <body>
+    {showPreloader && <Preloader />}
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <Header />
     <main id="contenido">
@@ -53,5 +70,13 @@ const { showWhatsAppFloat = true, ...seo } = Astro.props;
     </main>
     <Footer />
     {showWhatsAppFloat && <WhatsAppFloat />}
+    <script>
+      // Entradas animadas con GSAP (ver src/scripts/animations.ts)
+      import { initAnimations } from '../scripts/animations';
+      import { announceReady } from '../scripts/preloader';
+      // Si la página no tiene pantalla de carga, avisa de que está lista
+      if (!document.querySelector('[data-preloader]')) announceReady();
+      initAnimations();
+    </script>
   </body>
 </html>

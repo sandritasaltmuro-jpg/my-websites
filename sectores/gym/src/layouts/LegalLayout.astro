@@ -13,7 +13,7 @@ interface Props {
 const { title, description, heading } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} showWhatsAppFloat={false}>
+<BaseLayout title={title} description={description} showWhatsAppFloat={false} showPreloader={false}>
   <article class="container container--narrow legal">
     <h1>{heading}</h1>
     <slot />
