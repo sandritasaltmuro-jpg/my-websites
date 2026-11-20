@@ -15,7 +15,7 @@
    ========================================================= */
 
 /* Fuentes: Anton (marca y titulares), Archivo (subtítulos anchos y cuerpo),
-   Space Mono (microtextos tipo ficha). Se alojan en la propia web. */
+   Space Mono (microtextos tipo ficha). Se alojan en la propia web (@fontsource, ver BaseLayout). */
 
 :root {
   /* ---- Paleta de marca (de las referencias) ---- */
@@ -45,8 +45,8 @@
 
   /* ---- Tipografía ---- */
   --font-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;  /* marca gigante, vertical */
-  --font-heading: 'Archivo', system-ui, sans-serif;               /* usar en ancho expandido */
-  --font-body: 'Archivo', system-ui, sans-serif;
+  --font-heading: 'Archivo Variable', 'Archivo', system-ui, sans-serif;               /* usar en ancho expandido */
+  --font-body: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;             /* coordenadas, horarios */
 
   /* ---- Degradados (como la luz de estudio de las referencias) ----

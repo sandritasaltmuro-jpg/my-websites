@@ -1,0 +1,47 @@
+---
+/**
+ * DotWordmark.astro — Palabra gigante hecha de puntos que se iluminan con el cursor
+ * (y con dos focos de luz que se mueven solos). Pensado para el pie de página.
+ * Decorativo: el nombre real del negocio debe aparecer en texto en otro sitio.
+ *
+ * Uso: <DotWordmark word="BRAVA" />
+ * Los colores salen del tema (variables --wordmark-dot y --wordmark-glow en RGB).
+ */
+interface Props {
+  word: string;
+  /** Familia tipográfica para dibujar la palabra (ya cargada en la página) */
+  font?: string;
+  /** Separación entre puntos en píxeles (en escritorio) */
+  step?: number;
+  /** Colores en formato "R,G,B" */
+  dot?: string;
+  glow?: string;
+}
+const { word, font = 'Anton', step = 7, dot = '251,237,218', glow = '211,128,46' } = Astro.props;
+---
+
+<canvas
+  class="dot-wordmark"
+  data-dot-wordmark
+  data-word={word}
+  data-font={font}
+  data-step={step}
+  data-dot={dot}
+  data-glow={glow}
+  aria-hidden="true"
+></canvas>
+
+<script>
+  import { initDotWordmark } from '../scripts/dot-wordmark';
+  document.querySelectorAll<HTMLCanvasElement>('[data-dot-wordmark]').forEach(initDotWordmark);
+</script>
+
+<style>
+  .dot-wordmark {
+    display: block;
+    width: 100%;
+    /* La altura la calcula el script según el ancho */
+    min-height: 4rem;
+    cursor: crosshair;
+  }
+</style>

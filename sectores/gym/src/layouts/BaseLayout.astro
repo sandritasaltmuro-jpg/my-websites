@@ -13,10 +13,14 @@ import LocalBusinessSchema from '../components/LocalBusinessSchema.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+// Fuentes del tema, alojadas en la propia web (sin peticiones a Google)
+import '@fontsource/anton';
+import '@fontsource-variable/archivo';
+import '@fontsource/space-mono';
 import '../styles/tokens.css';
 import '../styles/base.css';
 // Tema activo: cambia esta línea para usar otro (ver src/themes/README.md)
-import '../themes/neutro.css';
+import '../themes/brava.css';
 
 interface Props {
   title?: string;

@@ -1,11 +1,21 @@
 ---
 /**
- * Footer.astro — Datos del negocio (NAP) en texto en todas las páginas,
- * horario resumido, redes y enlaces legales. Todo desde site.ts.
+ * Footer.astro (kit gym) — Pie sobre rojo intenso con la marca en puntos animados.
+ * Debajo: datos del negocio (NAP) en texto, horario, menú, redes y legales.
+ * Todo sale de site.ts. Contraste: crema sobre rojo intenso = 7,3.
  */
 import { site } from '../config/site';
 import { fullAddress, phoneUrl, emailUrl, whatsappUrl } from '../utils/contact';
+import DotWordmark from './DotWordmark.astro';
 import Icon from './Icon.astro';
+
+interface Props {
+  /** Palabra gigante en puntos (por defecto, la primera palabra del nombre) */
+  word?: string;
+  /** Muestra la etiqueta de proyecto conceptual (solo en webs de portfolio) */
+  concept?: boolean;
+}
+const { word = site.name.split(' ')[0].toUpperCase(), concept = site.noindex } = Astro.props;
 
 const socials = [
   { name: 'Instagram', icon: 'instagram', url: site.social.instagram },
@@ -16,30 +26,42 @@ const socials = [
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-  <div class="container site-footer__grid">
+<footer class="gym-footer">
+  <div class="gym-footer__mark">
+    <DotWordmark word={word} />
+  </div>
+
+  <div class="container gym-footer__grid">
     <div>
-      <p class="site-footer__name">{site.name}</p>
+      <p class="gym-footer__label">Visítanos</p>
       <address>
+        <strong>{site.name}</strong><br />
         {fullAddress()}<br />
-        <a href={phoneUrl()}>{site.contact.phone}</a><br />
-        <a href={emailUrl()}>{site.contact.email}</a><br />
-        <a href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+        {site.address.directions}
       </address>
     </div>
 
     <div>
-      <p class="site-footer__heading">Horario</p>
+      <p class="gym-footer__label">Horario</p>
       <ul role="list">
-        {site.hours.map((h) => <li>{h.label}: {h.opens}–{h.closes}</li>)}
+        {site.hours.map((h) => <li>{h.label} · {h.opens}–{h.closes}</li>)}
         {site.closedLabel && <li>{site.closedLabel}</li>}
       </ul>
     </div>
 
-    {socials.length > 0 && (
-      <div>
-        <p class="site-footer__heading">Síguenos</p>
-        <ul class="site-footer__social" role="list">
+    <div>
+      <p class="gym-footer__label">Contacto</p>
+      <ul role="list">
+        <li>
+          <a href={whatsappUrl()} target="_blank" rel="noopener">
+            WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span>
+          </a>
+        </li>
+        <li><a href={phoneUrl()}>{site.contact.phone}</a></li>
+        <li><a href={emailUrl()}>{site.contact.email}</a></li>
+      </ul>
+      {socials.length > 0 && (
+        <ul class="gym-footer__social" role="list">
           {socials.map((s) => (
             <li>
               <a href={s.url} target="_blank" rel="noopener">
@@ -49,12 +71,20 @@ const year = new Date().getFullYear();
             </li>
           ))}
         </ul>
-      </div>
-    )}
+      )}
+    </div>
+
+    <nav aria-label="Pie de página">
+      <p class="gym-footer__label">Brava</p>
+      <ul role="list">
+        {site.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
   </div>
 
-  <div class="container site-footer__bottom">
-    <p>© {year} {site.name}</p>
+  <div class="container gym-footer__bottom">
+    <p>© {year} {site.name} · Todos los derechos reservados</p>
+    {concept && <p class="gym-footer__concept">Proyecto conceptual · no es un negocio real</p>}
     <ul role="list">
       <li><a href="/aviso-legal/">Aviso legal</a></li>
       <li><a href="/privacidad/">Privacidad</a></li>
@@ -63,43 +93,55 @@ const year = new Date().getFullYear();
 </footer>
 
 <style>
-  .site-footer {
-    padding-block: var(--space-8) var(--space-5);
-    background: var(--color-text);
-    color: var(--color-bg);
+  .gym-footer {
+    /* Rojo intenso de la tipografía de las referencias; texto crema (7,3:1) */
+    background: var(--brava-red-intense, #961d13);
+    color: var(--brava-cream, #fbedda);
+    padding-block: var(--space-7) var(--space-5);
     font-size: var(--text-sm);
+    overflow: hidden;
   }
-  .site-footer a { color: inherit; }
-  .site-footer ul { list-style: none; margin: 0; padding: 0; }
-  .site-footer__grid {
+  .gym-footer a { color: inherit; text-underline-offset: 0.2em; }
+  .gym-footer ul { list-style: none; margin: 0; padding: 0; }
+  .gym-footer li { margin-bottom: var(--space-2); }
+
+  .gym-footer__mark { padding-inline: var(--space-4); margin-bottom: var(--space-7); }
+
+  .gym-footer__grid {
     display: grid;
     gap: var(--space-6);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    padding-block: var(--space-6);
+    border-top: 1px solid rgba(251, 237, 218, 0.25);
   }
-  .site-footer__name {
-    font-family: var(--font-heading);
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
+  .gym-footer__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     margin-bottom: var(--space-3);
+    opacity: 0.85;
   }
-  .site-footer__heading { font-weight: var(--weight-bold); margin-bottom: var(--space-3); }
-  address { font-style: normal; line-height: 1.9; }
-  .site-footer__social { display: flex; gap: var(--space-2); }
-  .site-footer__social a {
-    display: inline-grid;
-    place-items: center;
-    width: var(--tap);
-    height: var(--tap);
-  }
-  .site-footer__bottom {
+  address { font-style: normal; line-height: 1.7; }
+  address strong { font-family: var(--font-display); font-weight: 400; font-size: var(--text-lg); letter-spacing: 0.02em; }
+
+  .gym-footer__social { display: flex; gap: var(--space-1); margin-top: var(--space-3) !important; }
+  .gym-footer__social li { margin: 0; }
+  .gym-footer__social a { display: inline-grid; place-items: center; width: var(--tap); height: var(--tap); }
+
+  .gym-footer__bottom {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: var(--space-3);
-    margin-top: var(--space-7);
+    align-items: center;
+    gap: var(--space-3) var(--space-5);
     padding-top: var(--space-5);
-    border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    border-top: 1px solid rgba(251, 237, 218, 0.25);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
   }
-  .site-footer__bottom p { margin: 0; }
-  .site-footer__bottom ul { display: flex; gap: var(--space-5); }
+  .gym-footer__bottom p { margin: 0; }
+  .gym-footer__bottom ul { display: flex; gap: var(--space-5); }
+  .gym-footer__bottom li { margin: 0; }
+  .gym-footer__concept { opacity: 0.85; }
 </style>

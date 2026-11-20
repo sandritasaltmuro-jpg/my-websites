@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.0",
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "@fontsource/anton": "^5.1.0",
+    "@fontsource/space-mono": "^5.1.0",
+    "@fontsource-variable/archivo": "^5.1.0"
   },
   "engines": {
     "node": ">=20.3.0"
