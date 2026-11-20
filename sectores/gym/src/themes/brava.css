@@ -40,6 +40,15 @@
   --font-body: 'Archivo', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;             /* coordenadas, horarios */
 
+  /* Degradados (como la luz de las referencias: del rojo profundo al naranja)
+     OJO contraste: el texto crema solo sobre la zona roja/oscura del degradado;
+     si el texto cae sobre la zona naranja, va en negro. */
+  --gradient-light: linear-gradient(135deg, var(--brava-red-deep) 0%, var(--brava-red) 55%, var(--brava-orange) 100%);
+  --gradient-heat: radial-gradient(circle at 80% 20%, var(--brava-orange) 0%, var(--brava-red) 45%, var(--brava-red-deep) 100%);
+  /* Sobre fotos: oscurece un lado para que el texto se lea siempre */
+  --gradient-photo: linear-gradient(90deg, rgba(20, 8, 7, 0.85) 0%, rgba(122, 15, 12, 0.45) 45%, rgba(240, 90, 40, 0) 100%);
+  --gradient-photo-bottom: linear-gradient(0deg, rgba(20, 8, 7, 0.9) 0%, rgba(20, 8, 7, 0) 60%);
+
   /* Forma: rectos y contundentes */
   --radius: 0;
 }
