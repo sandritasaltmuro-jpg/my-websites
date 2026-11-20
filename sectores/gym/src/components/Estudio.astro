@@ -1,0 +1,208 @@
+---
+/**
+ * Estudio.astro (kit gym · Brava) — Sección "El estudio" (ref. "Welcome to the club").
+ * ---------------------------------------------------------------------------
+ * - Arriba: etiquetas en mono y título centrado "Bienvenida al club" (H2).
+ * - Carrusel a todo el ancho con las salas: foto horizontal grande con efecto
+ *   película y una línea en mono encima (sala, datos). Se ve un trozo de la
+ *   siguiente foto para invitar a deslizar.
+ * - Abajo: flechas redondas, contador "01 / 04" y puntos.
+ *
+ * Datos: la lista `salas` de este archivo (foto, nombre y línea en mono).
+ * Carrusel: scroll nativo + src/scripts/carousel.ts (sin JS se desliza igual).
+ * Uso: <Estudio />
+ *
+ * Fondo: rojo intenso con resplandor naranja (--gradient-glow), texto crema (7,3:1).
+ */
+import FilmImage from './FilmImage.astro';
+import Icon from './Icon.astro';
+
+const salas = [
+  { photo: '22', name: 'Sala de fuerza', line: 'Racks · mancuernas · trineo de Hyrox', alt: 'Sala de fuerza de Brava Club con mancuernas cromadas y paredes rojas' },
+  { photo: '23', name: 'Sala hot', line: '35–38 °C · 14 plazas', alt: 'Sala hot con paneles de infrarrojos en el techo, barras de ballet y esterillas' },
+  { photo: '24', name: 'Sala de pole', line: 'Ocho barras · grupos por nivel', alt: 'Sala de pole con barras verticales cromadas y cortinas rojas' },
+  { photo: '25', name: 'Zona wellness', line: 'Sauna de infrarrojos · agua fría', alt: 'Zona wellness con sauna de infrarrojos y bañera de agua fría' },
+];
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id="estudio" class="estudio" aria-labelledby="estudio-title">
+  <div class="estudio__head">
+    <div class="estudio__labels" data-reveal="up">
+      <p>03 · El estudio</p>
+      <p aria-hidden="true">Malasaña, Madrid</p>
+    </div>
+    <h2 id="estudio-title" class="estudio__title" data-reveal="up">Bienvenida al club</h2>
+  </div>
+
+  <div class="estudio__carousel" role="region" aria-roledescription="carrusel" aria-label="Las salas del estudio" data-carousel>
+    <ul class="estudio__track" role="list" data-carousel-track>
+      {salas.map((s, i) => (
+        <li class="estudio__slide" role="group" aria-roledescription="diapositiva" aria-label={`${i + 1} de ${salas.length}: ${s.name}`}>
+          <FilmImage num={s.photo} alt={s.alt} sizes="(min-width: 64rem) 78vw, 88vw" widths={[640, 960, 1400, 2000]} />
+          <p class="estudio__caption">
+            <span aria-hidden="true">{pad(i + 1)}</span>
+            <strong>{s.name}</strong>
+            <span class="estudio__line">{s.line}</span>
+          </p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="estudio__controls" data-carousel-controls>
+      <button type="button" class="estudio__arrow estudio__arrow--prev" data-carousel-prev aria-label="Sala anterior">
+        <Icon name="arrow" size={20} />
+      </button>
+      <p class="estudio__count" aria-hidden="true" data-carousel-count>01 / {pad(salas.length)}</p>
+      <button type="button" class="estudio__arrow" data-carousel-next aria-label="Sala siguiente">
+        <Icon name="arrow" size={20} />
+      </button>
+    </div>
+    <div class="estudio__dots" data-carousel-dots>
+      {salas.map((s, i) => (
+        <button type="button" class="estudio__dot" aria-label={`Ver ${s.name}`} aria-current={i === 0 ? 'true' : undefined}></button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initCarousels } from '../scripts/carousel';
+  initCarousels();
+</script>
+
+<style>
+  .estudio {
+    padding-block: var(--section-space);
+    background: var(--gradient-glow), var(--brava-red-intense);
+    color: var(--color-text);
+  }
+
+  .estudio__head {
+    margin: 0 var(--space-5) var(--space-7);
+    text-align: center;
+  }
+  .estudio__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-7);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .estudio__labels p,
+  .estudio__caption,
+  .estudio__count {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  /* Título en mono, centrado (como pide el concepto) */
+  .estudio__title {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 1rem + 2.4vw, 3rem);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Pista: diapositivas al 88 % del ancho (se asoma la siguiente) ---- */
+  .estudio__track {
+    display: flex;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0 var(--space-5);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-5);
+    scrollbar-width: none;
+  }
+  .estudio__track::-webkit-scrollbar { display: none; }
+  .estudio__slide {
+    position: relative;
+    flex: 0 0 88%;
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: start;
+  }
+  .estudio__slide :global(.film) { width: 100%; height: 100%; }
+
+  /* Línea en mono sobre la foto, con fondo rojo intenso para que se lea siempre */
+  .estudio__caption {
+    position: absolute;
+    left: var(--space-3);
+    bottom: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    max-width: calc(100% - 2 * var(--space-3));
+    padding: var(--space-2) var(--space-3);
+    background: var(--brava-red-intense);
+  }
+  .estudio__caption strong { font-weight: 400; }
+
+  /* ---- Controles: flechas redondas + contador; solo con JavaScript ---- */
+  .estudio__controls,
+  .estudio__dots { display: none; }
+  :global(.js) .estudio__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+  :global(.js) .estudio__dots { display: flex; justify-content: center; margin-top: var(--space-2); }
+
+  .estudio__arrow {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease), background-color var(--duration-base) var(--ease);
+  }
+  .estudio__arrow:hover { border-color: var(--color-text); background: rgba(251, 237, 218, 0.08); }
+  .estudio__arrow--prev :global(svg) { transform: scaleX(-1); }
+
+  .estudio__dot {
+    position: relative;
+    width: 28px;
+    height: var(--tap);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  .estudio__dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-text);
+    opacity: 0.35;
+    transform: translate(-50%, -50%);
+    transition: opacity var(--duration-base) var(--ease);
+  }
+  .estudio__dot[aria-current='true']::before { opacity: 1; }
+
+  /* ---- Tableta y escritorio ---- */
+  @media (min-width: 48rem) {
+    .estudio__head { margin-inline: var(--space-7); }
+    .estudio__track { padding-inline: var(--space-7); scroll-padding-inline: var(--space-7); gap: var(--space-5); }
+    .estudio__caption { left: var(--space-5); bottom: var(--space-5); }
+  }
+  @media (min-width: 64rem) {
+    .estudio__slide { flex-basis: 78%; aspect-ratio: 16 / 9; }
+  }
+</style>

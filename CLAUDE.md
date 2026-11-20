@@ -57,16 +57,17 @@ docs/              Documentos de referencia (concepto Brava, bases SEO)
 Contenido completo, textos, precios, imágenes y reglas: **`docs/brava-concepto.md`**. Resumen de lo esencial:
 - Gimnasio boutique **solo para mujeres** en Malasaña (Madrid). Clases: Hyrox, HIIT, Barre, Pole dance + **Hot** (Hot Barre, Hot Pilates, Hot Stretch, sala a 35–38 °C). Wellness: fisio, spa y sauna. Comunidad: You + Brava.
 - **Paleta (medida de las referencias)**: ladrillo `#D24C30`, rojo Brava `#B8391F`, rojo intenso `#961D13`, borgoña `#5E251B`, ámbar `#D3802E`, terracota `#97553E`, azul acero `#5E6C73` (muy poco), negro cálido `#1C0F0C`, crema `#FBEDDA`.
-- **SIN FONDOS NEGROS**: fondo general borgoña, superficies rojo intenso, destacados rojo Brava/ladrillo, texto crema. Negro solo como texto sobre ámbar. Texto crema apagado (`--color-muted`) nunca sobre rojo Brava.
-- Tipografía: **Anton** (marca y titulares, mayúsculas), **Archivo** (cuerpo), **Space Mono** (etiquetas y microtextos). Esquinas rectas.
+- **SIN FONDOS NEGROS**: fondo general rojo intenso (degradados hacia rojo Brava y naranja), destacados rojo Brava/ladrillo, texto crema. Negro solo como texto sobre ámbar. Texto crema apagado (`--color-muted`) nunca sobre rojo Brava.
+- Tipografía: titulares con `--font-title` (Inter Tight, provisional), **Archivo** (cuerpo), **Space Mono** (etiquetas, cabecera y microtextos). Anton solo en restos (carrusel del Hero, pie). Esquinas rectas.
 - Estética: editorial de moda deportiva con **efecto película analógica** (grano, halo rojo, negros cálidos). Filtro `--film-filter` y grano `--film-grain` sobre todas las fotos. Degradados `--gradient-light`, `--gradient-heat`, `--gradient-photo(-bottom)`.
 - Rejilla de líneas finas, etiquetas en mono, titulares enormes y fotos a sangre (referencias de la sección 2 del FigJam).
 - **Orden de la página**: Pantalla de carga → Hero → Manifiesto → Clases (+ bloque Hot) → El estudio → Wellness → Horario → Tarifas → Equipo → You + Brava → **Preguntas frecuentes + Pie en un único bloque rojo intenso**.
 
 ### Estado del kit gym (20 nov 2026)
-- Hecho: tema `brava.css`, `site.ts` con datos ficticios, `Preloader`, animaciones GSAP, `Footer` + `DotWordmark`, `Hero` (con `FilmImage` para todas las fotos y las clases en `src/data/clases.ts`).
-- Página `index.astro`: de momento solo el Hero.
-- Pendiente, en este orden: Manifiesto → Clases + Hot → El estudio → Wellness → Horario → Tarifas → Equipo → You + Brava → FAQ unido al pie (rehacer `Footer` para que incluya FAQ por categorías y llamada final) → nueva cabecera (`Header`) y botón flotante de WhatsApp con la estética Brava → revisión final.
+- Hecho: tema `brava.css`, `site.ts` con datos ficticios, `Preloader`, animaciones GSAP, `Footer` + `DotWordmark`, `Header` transparente (todo en mono, sin botón), `Hero`, `Manifesto`, `Clases` (+ bloque Hot), `Estudio` y `Wellness`. Fotos con `FilmImage`; datos en `src/data/` (clases, wellness); carruseles con `src/scripts/carousel.ts`.
+- Fondos (decisión 20 nov): rojos intensos y naranjas, no borgoña. `--gradient-section` (seguro para texto crema) y `--gradient-glow` / degradados radiales con el naranja SIEMPRE detrás de fotos o titulares grandes, nunca bajo texto pequeño.
+- Titulares H1/H2: variable `--font-title` (ahora Inter Tight, estilo suizo; provisional). Anton queda solo en el carrusel del Hero y el pie.
+- Pendiente, en este orden: Horario → Tarifas → Equipo → You + Brava → FAQ unido al pie (rehacer `Footer` para que incluya FAQ por categorías y llamada final) → nueva cabecera (`Header`) y botón flotante de WhatsApp con la estética Brava → revisión final.
 - Imágenes: van en `sectores/gym/src/assets/brava/` con nombre numerado y descriptivo (lista y números en `docs/brava-concepto.md`, Parte 3). Ej.: `01-hero-sentadilla.png`, `05-clase-pole.png`, `13-ugc-espejo.png`, `22-estudio-fuerza.png`.
 
 ## Publicación

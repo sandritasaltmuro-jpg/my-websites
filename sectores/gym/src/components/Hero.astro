@@ -145,40 +145,9 @@ const newTab = ' (se abre en una pestaña nueva)';
 </section>
 
 <script>
-  /**
-   * Mini carrusel del Hero: flechas y puntos sobre un scroll horizontal nativo.
-   * Sin este script se puede deslizar igual (dedo, trackpad o teclado).
-   * No avanza solo: lo mueve quien lo usa.
-   */
-  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
-    const track = root.querySelector<HTMLElement>('[data-carousel-track]');
-    const slides = [...(track?.children ?? [])] as HTMLElement[];
-    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-carousel-dots] button')];
-    const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
-    const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
-    if (!track || slides.length < 2) return;
-
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let current = 0;
-
-    function goTo(index: number) {
-      const i = (index + slides.length) % slides.length; // da la vuelta al llegar al final
-      track!.scrollTo({ left: slides[i].offsetLeft - track!.offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
-    }
-
-    // Marca el punto activo según la diapositiva que se ve (también al deslizar a mano)
-    function update() {
-      const i = Math.round(track!.scrollLeft / track!.clientWidth);
-      if (i === current) return;
-      current = Math.max(0, Math.min(i, slides.length - 1));
-      dots.forEach((d, j) => (j === current ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
-    }
-
-    prev?.addEventListener('click', () => goTo(current - 1));
-    next?.addEventListener('click', () => goTo(current + 1));
-    dots.forEach((d, j) => d.addEventListener('click', () => goTo(j)));
-    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
-  });
+  // Flechas y puntos del mini carrusel (src/scripts/carousel.ts)
+  import { initCarousels } from '../scripts/carousel';
+  initCarousels();
 </script>
 
 <style>

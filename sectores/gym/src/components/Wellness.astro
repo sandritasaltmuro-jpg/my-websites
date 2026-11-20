@@ -1,0 +1,263 @@
+---
+/**
+ * Wellness.astro (kit gym · Brava) — Sección "Wellness · Recupera brava".
+ * ---------------------------------------------------------------------------
+ * Ref. "Every Body Has A Pattern": foto grande con líneas finas tipo gráfico encima.
+ * - Izquierda: foto de la sauna (06) con rejilla y curva de "temperatura" en SVG,
+ *   y debajo dos fotos pequeñas (fisio 07 y spa 08) con su etiqueta en mono.
+ * - Derecha: etiquetas, H2, entradilla, los cuatro servicios en filas separadas
+ *   por líneas finas (nombre, descripción, duración y precio) y el botón
+ *   "Reserva tu sesión" por WhatsApp.
+ *
+ * Datos: src/data/wellness.ts. Uso: <Wellness />
+ * Tono más calmado que el resto de la web (ver docs/brava-concepto.md).
+ *
+ * Fondo: degradado de calor con el naranja detrás de las fotos (arriba a la izquierda
+ * en móvil, abajo a la izquierda en escritorio); el texto cae siempre en la zona roja.
+ */
+import { whatsappUrl } from '../utils/contact';
+import { servicios, wellnessMessage } from '../data/wellness';
+import FilmImage from './FilmImage.astro';
+import Icon from './Icon.astro';
+---
+
+<section id="wellness" class="wellness" aria-labelledby="wellness-title">
+  <div class="wellness__visual">
+    <figure class="wellness__main" data-reveal="image">
+      <FilmImage num="06" alt="Hombros de una mujer envuelta en una toalla dentro de la sauna de infrarrojos" sizes="(min-width: 64rem) 45vw, 100vw" position="center 35%" />
+      <!-- Líneas finas tipo gráfico: rejilla y curva de calor (decorativo) -->
+      <svg class="wellness__chart" viewBox="0 0 400 500" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <g class="wellness__grid">
+          <line x1="0" y1="100" x2="400" y2="100" />
+          <line x1="0" y1="200" x2="400" y2="200" />
+          <line x1="0" y1="300" x2="400" y2="300" />
+          <line x1="0" y1="400" x2="400" y2="400" />
+          <line x1="100" y1="0" x2="100" y2="500" />
+          <line x1="200" y1="0" x2="200" y2="500" />
+          <line x1="300" y1="0" x2="300" y2="500" />
+        </g>
+        <path class="wellness__curve" d="M0 420 C 60 410, 90 330, 140 300 S 220 160, 270 150 S 350 190, 400 120" />
+        <circle class="wellness__point" cx="270" cy="150" r="5" />
+      </svg>
+      <figcaption class="wellness__ticks" aria-hidden="true">
+        <span>Sauna · 20 min</span>
+        <span>Infrarrojos · luz roja</span>
+      </figcaption>
+    </figure>
+
+    <div class="wellness__minis">
+      <figure class="wellness__mini" data-reveal="up">
+        <FilmImage num="07" alt="Manos de una fisioterapeuta trabajando el gemelo de una mujer" sizes="(min-width: 64rem) 22vw, 50vw" widths={[400, 700, 1000]} />
+        <figcaption>Fisio</figcaption>
+      </figure>
+      <figure class="wellness__mini" data-reveal="up">
+        <FilmImage num="08" alt="Gotas de agua y vapor sobre el hombro de una mujer al salir del agua fría" sizes="(min-width: 64rem) 22vw, 50vw" widths={[400, 700, 1000]} />
+        <figcaption>Spa</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="wellness__body">
+    <div class="wellness__labels" data-reveal="up">
+      <p>04 · Wellness</p>
+      <p>Recupera brava</p>
+    </div>
+    <h2 id="wellness-title" class="wellness__title" data-reveal="lines">Entrenar fuerte también es saber parar.</h2>
+    <p class="wellness__intro" data-reveal="up">
+      Después del esfuerzo, el cuidado. Fisio, spa y sauna en el mismo sitio donde entrenas.
+    </p>
+
+    <ul class="wellness__list" role="list">
+      {servicios.map((s) => (
+        <li class="wellness__item" data-reveal="up">
+          <h3 class="wellness__name">{s.name}</h3>
+          <p class="wellness__text">{s.description}</p>
+          <p class="wellness__data">{s.data}</p>
+        </li>
+      ))}
+    </ul>
+
+    <a class="wellness__cta" href={whatsappUrl(wellnessMessage)} target="_blank" rel="noopener" data-reveal="up">
+      <Icon name="whatsapp" />
+      <span>Reserva tu sesión</span>
+      <span class="sr-only"> de wellness por WhatsApp (se abre en una pestaña nueva)</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .wellness {
+    display: grid;
+    gap: var(--space-8);
+    padding: var(--section-space) var(--space-5);
+    /* Móvil: las fotos van arriba, así que el naranja nace ARRIBA a la izquierda
+       y el texto (debajo) cae en la zona roja */
+    background:
+      radial-gradient(circle at 0% 0%, var(--brava-amber) 0, var(--brava-brick) 16rem, var(--brava-red) 32rem, var(--brava-red-intense) 54rem);
+    color: var(--color-text);
+  }
+  .wellness figure { margin: 0; }
+
+  /* ---- Fotos ---- */
+  .wellness__visual {
+    display: grid;
+    gap: var(--space-4);
+    align-content: start;
+  }
+  .wellness__main {
+    position: relative;
+    aspect-ratio: 4 / 5;
+  }
+  .wellness__main { overflow: hidden; }
+  /* Zoom suave hacia la derecha: esconde la tira de película con letras del borde izquierdo de la foto 06 */
+  .wellness__main :global(.film) { width: 100%; height: 100%; transform: scale(1.12); transform-origin: 85% 40%; }
+
+  /* Gráfico: líneas crema muy finas sobre la foto */
+  .wellness__chart {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+  .wellness__grid line {
+    stroke: rgba(251, 237, 218, 0.28);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .wellness__curve {
+    fill: none;
+    stroke: var(--brava-cream);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+  .wellness__point { fill: var(--brava-cream); }
+
+  .wellness__ticks {
+    position: absolute;
+    inset: auto var(--space-3) var(--space-3) var(--space-3);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+  .wellness__ticks span,
+  .wellness__mini figcaption {
+    padding: var(--space-1) var(--space-2);
+    background: var(--brava-red-intense);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .wellness__minis {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .wellness__mini { position: relative; aspect-ratio: 1; }
+  .wellness__mini :global(.film) { width: 100%; height: 100%; }
+  .wellness__mini figcaption {
+    position: absolute;
+    left: var(--space-2);
+    bottom: var(--space-2);
+  }
+
+  /* ---- Texto ---- */
+  .wellness__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+    min-width: 0;
+  }
+  .wellness__labels {
+    align-self: stretch;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .wellness__labels p,
+  .wellness__data {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .wellness__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 1.2rem + 3.6vw, 4.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .wellness__intro {
+    margin: 0;
+    max-width: 42ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+
+  .wellness__list {
+    align-self: stretch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .wellness__item {
+    display: grid;
+    gap: var(--space-1) var(--space-5);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .wellness__name {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+  }
+  .wellness__text { margin: 0; }
+
+  /* Botón: crema con texto rojo intenso (7,3:1); al pasar, ámbar con texto negro (6,1:1) */
+  .wellness__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 3.5rem;
+    padding: 0 var(--space-6);
+    background: var(--brava-cream);
+    color: var(--brava-red-intense);
+    font-weight: var(--weight-bold);
+    text-decoration: none;
+    transition: background-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
+  }
+  .wellness__cta:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  /* ---- Tableta: filas de servicio en dos columnas (nombre | texto) ---- */
+  @media (min-width: 48rem) {
+    .wellness { padding-inline: var(--space-7); }
+    .wellness__item { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+    .wellness__name { grid-row: span 2; }
+  }
+
+  /* ---- Escritorio: fotos a la izquierda, texto a la derecha ---- */
+  @media (min-width: 64rem) {
+    .wellness {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: var(--space-9);
+      align-items: start;
+      background:
+        radial-gradient(circle at 0% 100%, var(--brava-amber) 0, var(--brava-brick) 24rem, var(--brava-red) 44rem, var(--brava-red-intense) 72rem);
+    }
+    .wellness__visual { position: sticky; top: calc(var(--header-h) + var(--space-5)); }
+  }
+</style>
