@@ -50,6 +50,10 @@
   --font-heading: 'Archivo Variable', 'Archivo', system-ui, sans-serif;               /* usar en ancho expandido */
   --font-body: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;             /* coordenadas, horarios */
+  /* Titulares H1 y H2 de las secciones: Inter Tight, grotesca de estilo suizo
+     (alternativa libre a Suisse Int'l / Helvetica). Para cambiarla, solo esta línea
+     y el import de la fuente en BaseLayout */
+  --font-title: 'Inter Tight Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* ---- Degradados (como la luz de estudio de las referencias) ----
      Texto crema solo sobre la zona roja/borgoña; si cae sobre ámbar, en negro. */

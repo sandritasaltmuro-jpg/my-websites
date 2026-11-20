@@ -241,17 +241,17 @@ const newTab = ' (se abre en una pestaña nueva)';
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
-  /* H1 centrado en Space Mono (la tipografía de las etiquetas y la cabecera) */
+  /* H1 centrado. Tipografía de titulares del tema (--font-title, provisional) */
   .hero__title {
     margin: auto;
     padding-block: var(--space-6);
     max-width: 22ch;
-    font-family: var(--font-mono);
-    font-weight: 400;
-    /* 26px en móvil → 64px en pantallas grandes; limitado también por la altura */
-    font-size: clamp(1.625rem, min(0.9rem + 3.4vw, 7.5svh), 4rem);
-    line-height: 1.12;
-    letter-spacing: -0.02em;
+    font-family: var(--font-title);
+    font-weight: 600;
+    /* 34px en móvil → 88px en pantallas grandes; limitado también por la altura */
+    font-size: clamp(2.125rem, min(1rem + 4.6vw, 9.5svh), 5.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
     text-align: center;
     text-transform: uppercase;
     text-wrap: balance;
