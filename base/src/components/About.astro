@@ -1,0 +1,41 @@
+---
+/**
+ * About.astro — "Sobre nosotros": texto (en el slot) + imagen opcional.
+ *
+ * Uso:
+ *   <About image={foto} imageAlt="El equipo en el local">
+ *     <p>Historia del negocio…</p>
+ *   </About>
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  image?: ImageMetadata;
+  imageAlt?: string;
+}
+const { image, imageAlt = '' } = Astro.props;
+---
+
+<div class:list={['about', { 'about--image': image }]}>
+  <div class="about__text"><slot /></div>
+  {image && (
+    <div class="about__media">
+      <Image src={image} alt={imageAlt} widths={[480, 800]} sizes="(min-width: 56rem) 40vw, 100vw" />
+    </div>
+  )}
+</div>
+
+<style>
+  .about { display: grid; gap: var(--space-7); align-items: center; }
+  .about__text :global(p) { font-size: var(--text-lg); }
+  .about__media img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  @media (min-width: 56rem) {
+    .about--image { grid-template-columns: 1fr 1fr; }
+  }
+</style>

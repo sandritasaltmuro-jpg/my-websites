@@ -1,0 +1,156 @@
+---
+/**
+ * Header.astro — Cabecera fija con nombre, menú y botón de WhatsApp.
+ * En móvil el menú se abre con un botón accesible (aria-expanded) y se cierra
+ * con Escape, al elegir un enlace o al volver a pulsar.
+ * Datos: site.name y site.nav (src/config/site.ts).
+ */
+import { site } from '../config/site';
+import { whatsappUrl } from '../utils/contact';
+import Icon from './Icon.astro';
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo">{site.name}</a>
+
+    <button
+      class="site-header__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      data-menu-toggle
+    >
+      <span class="icon-open"><Icon name="menu" size={24} /></span>
+      <span class="icon-close"><Icon name="close" size={24} /></span>
+      <span class="sr-only">Abrir o cerrar el menú</span>
+    </button>
+
+    <nav id="menu-principal" class="site-header__nav" aria-label="Principal" data-menu>
+      <ul>
+        {site.nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+      <a class="site-header__cta" href={whatsappUrl()} target="_blank" rel="noopener">
+        <Icon name="whatsapp" />
+        <span>Escríbenos</span>
+        <span class="sr-only">por WhatsApp (se abre en una pestaña nueva)</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Menú móvil: abre/cierra y mantiene aria-expanded al día
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  function setOpen(open: boolean) {
+    toggle?.setAttribute('aria-expanded', String(open));
+    menu?.classList.toggle('is-open', open);
+  }
+
+  toggle?.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+  // Cerrar al elegir un enlace (útil en one-page con anclas)
+  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  // Cerrar con Escape y devolver el foco al botón
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: 4rem;
+  }
+  .site-header__logo {
+    font-family: var(--font-heading);
+    font-weight: var(--weight-bold);
+    font-size: var(--text-lg);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  /* Botón de menú (solo móvil) */
+  .site-header__toggle {
+    display: inline-grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .site-header__toggle .icon-close { display: none; }
+  .site-header__toggle[aria-expanded='true'] .icon-open { display: none; }
+  .site-header__toggle[aria-expanded='true'] .icon-close { display: block; }
+
+  /* Menú en móvil: panel desplegable bajo la cabecera */
+  .site-header__nav {
+    display: none;
+    position: absolute;
+    inset: 100% 0 auto 0;
+    padding: var(--space-4) var(--space-5) var(--space-6);
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+  }
+  .site-header__nav.is-open { display: block; }
+  .site-header__nav ul { list-style: none; margin: 0 0 var(--space-4); padding: 0; }
+  .site-header__nav li a {
+    display: flex;
+    align-items: center;
+    min-height: var(--tap);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: var(--weight-medium);
+  }
+  .site-header__nav li a:hover { text-decoration: underline; }
+
+  .site-header__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius);
+    background: #0e7a41;
+    color: #ffffff;
+    font-weight: var(--weight-bold);
+    text-decoration: none;
+  }
+
+  /* Escritorio: menú en línea */
+  @media (min-width: 56rem) {
+    .site-header__toggle { display: none; }
+    .site-header__nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      position: static;
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+    .site-header__nav ul { display: flex; gap: var(--space-5); margin: 0; }
+  }
+</style>

@@ -1,24 +1,35 @@
 /* =========================================================
-   Tema: NEUTRO (provisional, sirve de punto de partida)
+   Tema: NEUTRO (punto de partida para cualquier sector)
    Un tema solo define personalidad: colores, fuentes y radios.
-   Para crear otro: copia este archivo (ej. belleza.css) y cambia los valores.
+   Para crear otro: copia este archivo y cambia los VALORES.
+   Todos los temas deben definir TODAS estas variables.
+   Contraste mínimo para texto: 4.5:1 (comprobado en este tema).
    ========================================================= */
 :root {
-  /* Colores — comprobar siempre contraste mínimo 4.5:1 para texto */
-  --color-bg: #faf9f7;
-  --color-surface: #ffffff;
-  --color-text: #1c1b19;
-  --color-muted: #5f5b55;
-  --color-primary: #1c1b19;      /* botones principales */
-  --color-on-primary: #ffffff;   /* texto sobre el botón principal */
+  /* ---- Colores: superficies ---- */
+  --color-bg: #faf9f7;           /* fondo general */
+  --color-surface: #ffffff;      /* tarjetas */
+  --color-surface-alt: #f1eee9;  /* secciones alternas */
+  --color-border: #e2ddd5;
+
+  /* ---- Colores: texto ---- */
+  --color-text: #1c1b19;         /* 16.4:1 sobre el fondo */
+  --color-muted: #5f5b55;        /* 6.4:1 sobre el fondo */
   --color-link: #1c1b19;
-  --color-border: #e4e0da;
+
+  /* ---- Colores: acciones ---- */
+  --color-primary: #1c1b19;      /* botón principal */
+  --color-on-primary: #ffffff;   /* texto sobre el botón principal */
+  --color-accent: #a3471f;       /* detalles: etiquetas, iconos (5.2:1 sobre secciones alternas) */
+  --color-on-accent: #ffffff;
   --color-focus: #2563eb;
 
-  /* Tipografía (fuentes del sistema hasta elegir las del tema) */
-  --font-heading: Georgia, 'Times New Roman', serif;
+  /* ---- Tipografía (fuentes del sistema: cero peso extra) ---- */
+  --font-display: Georgia, 'Times New Roman', serif;   /* titular del hero */
+  --font-heading: Georgia, 'Times New Roman', serif;   /* H2, H3 */
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* Forma */
+  /* ---- Forma ---- */
   --radius: 8px;
 }

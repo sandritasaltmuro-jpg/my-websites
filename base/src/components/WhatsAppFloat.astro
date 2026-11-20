@@ -1,0 +1,33 @@
+---
+/**
+ * WhatsAppFloat.astro — Botón flotante de WhatsApp (abajo a la derecha).
+ * Siempre visible en móvil: es la acción principal de casi todos los pequeños negocios.
+ * Se puede quitar en BaseLayout con showWhatsAppFloat={false}.
+ */
+import { whatsappUrl } from '../utils/contact';
+import Icon from './Icon.astro';
+---
+
+<a class="wa-float" href={whatsappUrl()} target="_blank" rel="noopener">
+  <Icon name="whatsapp" size={28} />
+  <span class="sr-only">Escríbenos por WhatsApp (se abre en una pestaña nueva)</span>
+</a>
+
+<style>
+  .wa-float {
+    position: fixed;
+    right: var(--space-4);
+    bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+    z-index: var(--z-floating);
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-pill);
+    background: #0e7a41;
+    color: #ffffff;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--duration-fast) var(--ease);
+  }
+  .wa-float:hover { transform: scale(1.06); }
+</style>

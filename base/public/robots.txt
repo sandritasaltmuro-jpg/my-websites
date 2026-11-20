@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-# Cambia el dominio por el del cliente
-Sitemap: https://www.ejemplo.com/sitemap-index.xml

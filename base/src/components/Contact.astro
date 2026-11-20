@@ -1,0 +1,38 @@
+---
+/**
+ * Contact.astro — Bloque de contacto. WhatsApp como acción principal;
+ * teléfono y email como alternativas (en texto, también para Google).
+ *
+ * Uso: <Contact text="Cuéntanos qué necesitas y te respondemos en el día." />
+ */
+import { site } from '../config/site';
+import { whatsappUrl, phoneUrl, emailUrl } from '../utils/contact';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  text?: string;
+  whatsappLabel?: string;
+}
+const {
+  text = 'Cuéntanos qué necesitas y te respondemos lo antes posible.',
+  whatsappLabel = 'Escríbenos por WhatsApp',
+} = Astro.props;
+---
+
+<div class="contact">
+  <p class="contact__text">{text}</p>
+  <Button href={whatsappUrl()} variant="whatsapp" icon="whatsapp">{whatsappLabel}</Button>
+  <ul class="contact__alt" role="list">
+    <li><Icon name="phone" /> <a href={phoneUrl()}>{site.contact.phone}</a></li>
+    <li><Icon name="mail" /> <a href={emailUrl()}>{site.contact.email}</a></li>
+  </ul>
+</div>
+
+<style>
+  .contact { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-5); }
+  .contact__text { font-size: var(--text-lg); margin: 0; }
+  .contact__alt { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-5); }
+  .contact__alt li { display: flex; align-items: center; gap: var(--space-2); }
+  .contact__alt a { min-height: var(--tap); display: inline-flex; align-items: center; }
+</style>

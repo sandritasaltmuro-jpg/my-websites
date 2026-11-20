@@ -23,6 +23,7 @@
   /* Roles (los usa la base común) */
   --color-bg: var(--brava-black);
   --color-surface: var(--brava-red-deep);
+  --color-surface-alt: var(--brava-red);
   --color-text: var(--brava-cream);
   --color-muted: #d9c7b4;
   --color-primary: var(--brava-red);       /* botones principales */
