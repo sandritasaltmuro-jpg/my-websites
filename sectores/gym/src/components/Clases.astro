@@ -1,0 +1,351 @@
+---
+/**
+ * Clases.astro (kit gym · Brava) — Sección "Clases" con el bloque destacado "Hot".
+ * ---------------------------------------------------------------------------
+ * 1. Clases (#clases): cabecera con etiquetas en mono y H2; debajo, cuatro tarjetas
+ *    con foto a sangre (efecto película + --gradient-photo-bottom), nombre (H3),
+ *    duración, intensidad (●●○) y nivel, descripción y enlace para reservar.
+ * 2. Hot (#hot): bloque con degradado de calor (naranja → rojo). Arriba, franja ancha
+ *    con la foto de la sala; debajo, titular, entradilla y aviso de salud a la izquierda
+ *    y las tres clases hot en filas separadas por líneas finas a la derecha.
+ *
+ * Datos: src/data/clases.ts. Reservas por WhatsApp (site.ts) con mensaje de la clase.
+ * Uso: <Clases />
+ *
+ * Contraste: texto crema sobre --gradient-section (≥ 5:1) y sobre la parte roja del
+ * degradado hot; el naranja intenso queda detrás de la foto y del titular grande.
+ */
+import { site } from '../config/site';
+import { whatsappUrl } from '../utils/contact';
+import { clases, clasesHot, intensityDots, intensityLabel } from '../data/clases';
+import FilmImage from './FilmImage.astro';
+
+const newTab = ' (se abre en una pestaña nueva)';
+const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase de ${name} en ${site.name}.`);
+---
+
+<section id="clases" class="clases" aria-labelledby="clases-title">
+  <div class="clases__head">
+    <div class="clases__labels" data-reveal="up">
+      <p>02 · Clases</p>
+      <p>Máximo 12 por clase</p>
+    </div>
+    <h2 id="clases-title" class="clases__title" data-reveal="lines">Hyrox, HIIT, barre y pole.</h2>
+    <p class="clases__intro" data-reveal="up">
+      Cuatro formas de entrenar fuerte, en grupos reducidos y con entrenadoras que te corrigen de verdad.
+      Tu primera clase, la que tú elijas, es gratis.
+    </p>
+  </div>
+
+  <ul class="clases__grid" role="list">
+    {clases.map((c, i) => (
+      <li class="card" data-reveal="up" data-delay={String(i * 0.08)}>
+        <div class="card__media">
+          <FilmImage num={c.photo} alt={c.alt} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" widths={[480, 800, 1200]} />
+          <div class="card__over">
+            <span class="card__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="card__name">{c.name}</h3>
+          </div>
+        </div>
+        <dl class="card__facts">
+          <div><dt>Duración</dt><dd>{c.minutes} min</dd></div>
+          <div>
+            <dt>Intensidad</dt>
+            <dd><span aria-hidden="true">{intensityDots(c.intensity)}</span><span class="sr-only">{intensityLabel(c.intensity)}</span></dd>
+          </div>
+          <div><dt>Nivel</dt><dd>{c.level}</dd></div>
+        </dl>
+        <p class="card__text">{c.description}</p>
+        <a class="card__book" href={reservar(c.name)} target="_blank" rel="noopener">
+          Reservar {c.name}<span class="sr-only"> por WhatsApp{newTab}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section id="hot" class="hot" aria-labelledby="hot-title">
+  <div class="hot__media" data-reveal="image">
+    <FilmImage num="23" alt="Sala hot de Brava Club iluminada con paneles de infrarrojos" sizes="(min-width: 64rem) 50vw, 100vw" />
+    <p class="hot__tag" aria-hidden="true">Sala hot · 35–38 °C · 14 plazas</p>
+  </div>
+
+  <div class="hot__body">
+    <div class="hot__lead">
+      <p class="hot__label" data-reveal="up">02b · Hot</p>
+      <h2 id="hot-title" class="hot__title" data-reveal="lines">Sube la temperatura.</h2>
+      <p class="hot__intro" data-reveal="up">
+        Nuestra sala hot se calienta a 35–38 °C con paneles de infrarrojos.
+        Más sudor, más flexibilidad, la misma actitud.
+      </p>
+      <p class="hot__note">
+        Hidrátate antes y después. Si estás embarazada o tienes alguna condición médica, consulta antes con tu médico.
+      </p>
+    </div>
+
+    <ul class="hot__list" role="list">
+      {clasesHot.map((c) => (
+        <li class="hot__item" data-reveal="up">
+          <div class="hot__item-head">
+            <h3 class="hot__name">{c.name}</h3>
+            <p class="hot__meta">
+              {c.minutes} min · <span aria-hidden="true">{intensityDots(c.intensity)}</span>
+              <span class="sr-only">intensidad {intensityLabel(c.intensity)}</span>
+            </p>
+          </div>
+          <p class="hot__text">{c.description}</p>
+          <a class="card__book" href={reservar(c.name)} target="_blank" rel="noopener">
+            Reservar<span class="sr-only"> {c.name} por WhatsApp{newTab}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* =========================================================
+     1. CLASES
+     ========================================================= */
+  .clases {
+    padding-block: var(--section-space);
+    background: var(--gradient-section);
+    color: var(--color-text);
+  }
+
+  .clases__head {
+    display: grid;
+    gap: var(--space-5);
+    margin-inline: var(--space-5);
+    margin-bottom: var(--space-7);
+  }
+  .clases__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .clases__labels p,
+  .hot__label,
+  .hot__tag,
+  .hot__meta,
+  .card__num,
+  .card__facts dt,
+  .card__book {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .clases__title,
+  .hot__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.2rem + 5.5vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .clases__intro {
+    margin: 0;
+    max-width: 46ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+
+  /* ---- Tarjetas ---- */
+  .clases__grid {
+    display: grid;
+    gap: var(--space-7) var(--space-5);
+    margin: 0 var(--space-5);
+    padding: 0;
+    list-style: none;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .card__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    margin-bottom: var(--space-4);
+  }
+  .card__media :global(.film) { width: 100%; height: 100%; }
+  /* Nombre sobre la foto, con el degradado oscuro del tema debajo */
+  .card__over {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-8) var(--space-4) var(--space-4);
+    background: var(--gradient-photo-bottom);
+  }
+  .card__name {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Datos en tres columnas con líneas finas, como una ficha */
+  .card__facts {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    margin: 0 0 var(--space-4);
+    border-block: 1px solid var(--color-border);
+  }
+  .card__facts > div {
+    padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  }
+  .card__facts > div + div {
+    padding-left: var(--space-3);
+    border-left: 1px solid var(--color-border);
+  }
+  .card__facts dt { font-size: 0.6875rem; opacity: 0.85; }
+  .card__facts dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .card__text {
+    margin: 0 0 var(--space-4);
+    line-height: var(--leading-normal);
+  }
+
+  /* Enlace de reserva: mono subrayado con flecha */
+  .card__book {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    min-height: var(--tap);
+    margin-top: auto;
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 0.4em;
+  }
+  .card__book span[aria-hidden] { transition: transform var(--duration-base) var(--ease); }
+  .card__book:hover span[aria-hidden] { transform: translateX(4px); }
+
+  /* =========================================================
+     2. HOT — naranja intenso arriba a la derecha (detrás de la foto)
+     que se funde en rojo intenso donde va el texto.
+     Las paradas van en rem para que en móvil el texto también caiga en la zona roja.
+     ========================================================= */
+  .hot {
+    display: grid;
+    background:
+      radial-gradient(circle at 100% 0%, var(--brava-amber) 0, var(--brava-brick) 16rem, var(--brava-red) 30rem, var(--brava-red-intense) 52rem);
+    color: var(--color-text);
+  }
+  /* Franja de foto a todo el ancho (la foto es horizontal) */
+  .hot__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+  }
+  .hot__media :global(.film) { position: absolute; inset: 0; }
+  .hot__tag {
+    position: absolute;
+    left: var(--space-5);
+    bottom: var(--space-4);
+    padding: var(--space-1) var(--space-2);
+    background: var(--brava-red-intense);
+  }
+
+  .hot__body {
+    display: grid;
+    gap: var(--space-7);
+    padding: var(--space-8) var(--space-5);
+  }
+  .hot__lead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+  .hot__intro {
+    margin: 0;
+    max-width: 44ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+
+  .hot__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .hot__item {
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .hot__item-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+  }
+  .hot__name {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .hot__text { margin: 0; }
+  .hot__item .card__book { margin-top: 0; }
+  .hot__note {
+    margin: 0;
+    max-width: 52ch;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: var(--leading-normal);
+  }
+
+  /* ---- Tableta ---- */
+  @media (min-width: 40rem) {
+    .clases__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 48rem) {
+    .clases__head,
+    .clases__grid { margin-inline: var(--space-7); }
+    .clases__head {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: end;
+    }
+    .clases__labels { grid-column: 1 / -1; }
+    .clases__intro { justify-self: end; }
+    .hot__body { padding: var(--space-9) var(--space-7); }
+  }
+
+  /* ---- Escritorio: cuatro tarjetas; Hot con franja de foto y texto en dos columnas ---- */
+  @media (min-width: 64rem) {
+    .clases__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .hot__media { aspect-ratio: auto; height: min(70svh, 40rem); }
+    .hot__body {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      gap: var(--space-9);
+      align-items: start;
+    }
+    .hot {
+      background:
+        radial-gradient(circle at 100% 0%, var(--brava-amber) 0, var(--brava-brick) 22rem, var(--brava-red) 40rem, var(--brava-red-intense) 70rem);
+    }
+  }
+</style>

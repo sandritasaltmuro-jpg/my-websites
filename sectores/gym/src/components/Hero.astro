@@ -20,7 +20,7 @@
  */
 import { site } from '../config/site';
 import { whatsappUrl } from '../utils/contact';
-import { clases } from '../data/clases';
+import { clases, clasesHot } from '../data/clases';
 import FilmImage from './FilmImage.astro';
 import Icon from './Icon.astro';
 
@@ -48,6 +48,11 @@ function dms(value: number, pos: string, neg: string) {
 const coords = `${dms(site.geo.latitude, 'N', 'S')} ${dms(site.geo.longitude, 'E', 'W')}`;
 
 const pad = (n: number) => String(n).padStart(2, '0');
+// Carrusel: las cuatro clases principales + Hot Barre como muestra de la sala hot
+const slides = [...clases, clasesHot[0]].map((c) => ({
+  ...c,
+  meta: `${c.minutes} min · ${c.level ?? 'Sala a 35–38 °C'}`,
+}));
 const newTab = ' (se abre en una pestaña nueva)';
 ---
 
@@ -98,12 +103,12 @@ const newTab = ' (se abre en una pestaña nueva)';
         </div>
 
         <ul class="hero__track" role="list" data-carousel-track>
-          {clases.map((c, i) => (
+          {slides.map((c, i) => (
             <li
               class="hero__slide"
               role="group"
               aria-roledescription="diapositiva"
-              aria-label={`${i + 1} de ${clases.length}: ${c.name}`}
+              aria-label={`${i + 1} de ${slides.length}: ${c.name}`}
             >
               <FilmImage num={c.photo} alt={c.alt} sizes="112px" widths={[224, 336]} class="hero__thumb" />
               <div class="hero__slide-text">
@@ -126,7 +131,7 @@ const newTab = ' (se abre en una pestaña nueva)';
         </ul>
 
         <div class="hero__dots" data-carousel-dots>
-          {clases.map((c, i) => (
+          {slides.map((c, i) => (
             <button type="button" class="hero__dot" aria-label={`Ver ${c.name}`} aria-current={i === 0 ? 'true' : undefined}></button>
           ))}
         </div>

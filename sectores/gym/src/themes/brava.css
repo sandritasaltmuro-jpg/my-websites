@@ -32,7 +32,9 @@
   /* ---- Roles (los usan los componentes) ---- */
   /* SIN FONDOS NEGROS (decisión 20 nov): todo en la gama de rojos.
      El negro cálido solo se usa para texto sobre ámbar. */
-  --color-bg: var(--brava-burgundy);          /* crema sobre borgoña: 10,4 */
+  /* Fondo general en ROJO INTENSO, como el pie (decisión 20 nov: rojos más vivos;
+     el borgoña quedaba marrón). Crema encima: 7,3 */
+  --color-bg: var(--brava-red-intense);
   --color-surface: var(--brava-red-intense);  /* crema sobre rojo intenso: 7,3 */
   --color-surface-alt: var(--brava-red);      /* crema sobre rojo Brava: 5,0 */
   --color-border: rgba(251, 237, 218, 0.18);
@@ -59,6 +61,12 @@
      Texto crema solo sobre la zona roja/borgoña; si cae sobre ámbar, en negro. */
   --gradient-light: linear-gradient(135deg, var(--brava-burgundy) 0%, var(--brava-red) 55%, var(--brava-amber) 100%);
   --gradient-heat: radial-gradient(circle at 80% 15%, var(--brava-amber) 0%, var(--brava-brick) 35%, var(--brava-burgundy) 100%);
+  /* Fondo de secciones: de rojo intenso a rojo Brava. Seguro para texto crema
+     en cualquier punto (5,0 → 7,3). NO usar crema apagada encima (baja de 4,5 en la zona Brava) */
+  --gradient-section: linear-gradient(160deg, var(--brava-red-intense) 0%, var(--brava-red) 100%);
+  /* Resplandor naranja (ámbar → ladrillo) para esquinas de las secciones.
+     DECORATIVO: debajo solo titulares grandes o fotos, nunca texto pequeño */
+  --gradient-glow: radial-gradient(ellipse 60% 70% at 100% 0%, rgba(211, 128, 46, 0.75) 0%, rgba(210, 76, 48, 0.45) 40%, rgba(210, 76, 48, 0) 75%);
   --gradient-shadow: linear-gradient(180deg, var(--brava-burgundy) 0%, var(--brava-black) 100%);
   /* Capas sobre fotos para que el texto se lea siempre */
   --gradient-photo: linear-gradient(90deg, rgba(28, 15, 12, 0.88) 0%, rgba(94, 37, 27, 0.5) 45%, rgba(211, 128, 46, 0) 100%);
