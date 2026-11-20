@@ -4,24 +4,20 @@
  * ---------------------------------------------------------------------------
  * 1. Clases (#clases): cabecera con etiquetas en mono y H2; debajo, cuatro tarjetas
  *    con foto a sangre (efecto película + --gradient-photo-bottom), nombre (H3),
- *    duración, intensidad (●●○) y nivel, descripción y enlace para reservar.
+ *    duración, intensidad (●●○) y nivel, y descripción.
  * 2. Hot (#hot): bloque con degradado de calor (naranja → rojo). Arriba, franja ancha
  *    con la foto de la sala; debajo, titular, entradilla y aviso de salud a la izquierda
  *    y las tres clases hot en filas separadas por líneas finas a la derecha.
  *
- * Datos: src/data/clases.ts. Reservas por WhatsApp (site.ts) con mensaje de la clase.
+ * Datos: src/data/clases.ts. (Sin botones de reserva por ahora: se definirán más adelante.)
  * Uso: <Clases />
  *
  * Contraste: texto crema sobre --gradient-section (≥ 5:1) y sobre la parte roja del
  * degradado hot; el naranja intenso queda detrás de la foto y del titular grande.
  */
-import { site } from '../config/site';
-import { whatsappUrl } from '../utils/contact';
 import { clases, clasesHot, intensityDots, intensityLabel } from '../data/clases';
 import FilmImage from './FilmImage.astro';
 
-const newTab = ' (se abre en una pestaña nueva)';
-const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase de ${name} en ${site.name}.`);
 ---
 
 <section id="clases" class="clases" aria-labelledby="clases-title">
@@ -56,10 +52,6 @@ const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase 
           <div><dt>Nivel</dt><dd>{c.level}</dd></div>
         </dl>
         <p class="card__text">{c.description}</p>
-        <a class="card__book" href={reservar(c.name)} target="_blank" rel="noopener">
-          Reservar {c.name}<span class="sr-only"> por WhatsApp{newTab}</span>
-          <span aria-hidden="true">→</span>
-        </a>
       </li>
     ))}
   </ul>
@@ -95,10 +87,6 @@ const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase 
             </p>
           </div>
           <p class="hot__text">{c.description}</p>
-          <a class="card__book" href={reservar(c.name)} target="_blank" rel="noopener">
-            Reservar<span class="sr-only"> {c.name} por WhatsApp{newTab}</span>
-            <span aria-hidden="true">→</span>
-          </a>
         </li>
       ))}
     </ul>
@@ -133,8 +121,7 @@ const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase 
   .hot__tag,
   .hot__meta,
   .card__num,
-  .card__facts dt,
-  .card__book {
+  .card__facts dt {
     margin: 0;
     font-family: var(--font-mono);
     font-size: var(--text-xs);
@@ -223,20 +210,6 @@ const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase 
     line-height: var(--leading-normal);
   }
 
-  /* Enlace de reserva: mono subrayado con flecha */
-  .card__book {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    align-self: flex-start;
-    min-height: var(--tap);
-    margin-top: auto;
-    color: var(--color-text);
-    text-decoration: underline;
-    text-underline-offset: 0.4em;
-  }
-  .card__book span[aria-hidden] { transition: transform var(--duration-base) var(--ease); }
-  .card__book:hover span[aria-hidden] { transform: translateX(4px); }
 
   /* =========================================================
      2. HOT — naranja intenso arriba a la derecha (detrás de la foto)
@@ -309,7 +282,6 @@ const reservar = (name: string) => whatsappUrl(`Hola, quiero reservar una clase 
     text-transform: uppercase;
   }
   .hot__text { margin: 0; }
-  .hot__item .card__book { margin-top: 0; }
   .hot__note {
     margin: 0;
     max-width: 52ch;

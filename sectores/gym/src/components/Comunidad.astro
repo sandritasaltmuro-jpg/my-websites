@@ -1,0 +1,228 @@
+---
+/**
+ * Comunidad.astro (kit gym · Brava) — Sección "You + Brava" (ref. "you + rhode").
+ * ---------------------------------------------------------------------------
+ * - Cabecera pequeña "you + brava" (H2), texto con la cuenta y el hashtag.
+ * - Carrusel horizontal de fotos verticales de clientas (13–21) con su @usuario.
+ *   Al pasar el ratón (o con el foco) se oscurece la foto y aparece el @usuario
+ *   con el icono de Instagram; en móvil el @usuario se ve siempre.
+ * - Abajo: barra de progreso y flechas redondas.
+ * - Sin botón "Síguenos" por ahora (las llamadas a la acción se definirán después).
+ *
+ * Datos: src/data/comunidad.ts (@usuarios ficticios). Las fotos llevan el filtro
+ * analógico de la web (FilmImage). Carrusel: src/scripts/carousel.ts.
+ * Uso: <Comunidad />
+ */
+import { site } from '../config/site';
+import { posts, hashtag, cuenta } from '../data/comunidad';
+import FilmImage from './FilmImage.astro';
+import Icon from './Icon.astro';
+---
+
+<section id="comunidad" class="comunidad" aria-labelledby="comunidad-title">
+  <div class="comunidad__head">
+    <div class="comunidad__labels" data-reveal="up">
+      <p>08 · Comunidad</p>
+      <p>{hashtag}</p>
+    </div>
+    <div class="comunidad__intro">
+      <h2 id="comunidad-title" class="comunidad__title" data-reveal="up">you + brava</h2>
+      <p class="comunidad__text" data-reveal="up">
+        Así entrenáis vosotras. Etiqueta <strong>{cuenta}</strong> con <strong>{hashtag}</strong> y aparece aquí.
+      </p>
+    </div>
+  </div>
+
+  <div class="comunidad__carousel" role="region" aria-roledescription="carrusel" aria-label="Publicaciones de la comunidad" data-carousel>
+    <ul class="comunidad__track" role="list" data-carousel-track>
+      {posts.map((p, i) => (
+        <li class="post" aria-label={`${i + 1} de ${posts.length}`} role="group" aria-roledescription="diapositiva">
+          <figure class="post__fig" tabindex="0">
+            <FilmImage num={p.photo} alt={p.alt} sizes="(min-width: 64rem) 22vw, (min-width: 40rem) 40vw, 72vw" widths={[360, 600, 900]} />
+            <figcaption class="post__user">
+              <Icon name="instagram" size={18} />
+              <span>{p.user}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+
+    <div class="comunidad__controls">
+      <div class="comunidad__progress" aria-hidden="true" data-carousel-progress><span></span></div>
+      <div class="comunidad__arrows" data-carousel-controls>
+        <button type="button" class="comunidad__arrow comunidad__arrow--prev" data-carousel-prev aria-label="Publicación anterior">
+          <Icon name="arrow" size={18} />
+        </button>
+        <button type="button" class="comunidad__arrow" data-carousel-next aria-label="Publicación siguiente">
+          <Icon name="arrow" size={18} />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {site.noindex && <p class="comunidad__note">Publicaciones y @usuarios ficticios · proyecto conceptual</p>}
+</section>
+
+<script>
+  import { initCarousels } from '../scripts/carousel';
+  initCarousels();
+</script>
+
+<style>
+  .comunidad {
+    padding-block: var(--section-space);
+    background: var(--gradient-glow), var(--brava-red-intense);
+    color: var(--color-text);
+    overflow: hidden;
+  }
+
+  .comunidad__head { margin: 0 var(--space-5) var(--space-7); }
+  .comunidad__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .comunidad__labels p,
+  .post__user,
+  .comunidad__note {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .comunidad__intro {
+    display: grid;
+    gap: var(--space-4);
+  }
+  /* "you + brava" en minúsculas, como una firma */
+  .comunidad__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.25rem, 1.4rem + 3vw, 4rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .comunidad__text {
+    margin: 0;
+    max-width: 40ch;
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+  .comunidad__text strong { font-weight: var(--weight-bold); }
+
+  /* ---- Pista: fotos verticales, se asoma la siguiente ---- */
+  .comunidad__track {
+    display: flex;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0 var(--space-5);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-5);
+    scrollbar-width: none;
+  }
+  .comunidad__track::-webkit-scrollbar { display: none; }
+  .post {
+    flex: 0 0 72%;
+    scroll-snap-align: start;
+  }
+  .post__fig {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+  .post__fig :global(.film) { width: 100%; height: 100%; }
+  .post__fig :global(img) { transition: transform var(--duration-slow) var(--ease); }
+
+  /* @usuario: siempre visible en móvil, sobre una sombra suave abajo */
+  .post__user {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-7) var(--space-3) var(--space-3);
+    background: var(--gradient-photo-bottom);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  /* Con ratón: el @usuario aparece al pasar por encima (o con el foco del teclado) */
+  @media (hover: hover) {
+    .post__user {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--duration-base) var(--ease), transform var(--duration-base) var(--ease);
+    }
+    .post__fig:hover .post__user,
+    .post__fig:focus-visible .post__user { opacity: 1; transform: none; }
+    .post__fig:hover :global(img) { transform: scale(1.04); }
+  }
+
+  /* ---- Controles ---- */
+  .comunidad__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin: var(--space-6) var(--space-5) 0;
+  }
+  .comunidad__progress {
+    flex: 1;
+    height: 2px;
+    background: var(--color-border);
+  }
+  .comunidad__progress span {
+    display: block;
+    height: 100%;
+    background: var(--brava-cream);
+    transform-origin: left;
+    transform: scaleX(var(--progress, 0.25));
+    transition: transform var(--duration-base) var(--ease);
+  }
+  .comunidad__arrows { display: none; }
+  :global(.js) .comunidad__arrows { display: flex; gap: var(--space-2); }
+  .comunidad__arrow {
+    display: grid;
+    place-items: center;
+    width: var(--tap);
+    height: var(--tap);
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease), background-color var(--duration-base) var(--ease);
+  }
+  .comunidad__arrow:hover { border-color: var(--color-text); background: rgba(251, 237, 218, 0.08); }
+  .comunidad__arrow--prev :global(svg) { transform: scaleX(-1); }
+
+  .comunidad__note { margin: var(--space-5) var(--space-5) 0; }
+
+  /* ---- Tableta y escritorio ---- */
+  @media (min-width: 40rem) {
+    .post { flex-basis: 40%; }
+  }
+  @media (min-width: 48rem) {
+    .comunidad__head { margin-inline: var(--space-7); }
+    .comunidad__intro {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: end;
+    }
+    .comunidad__text { justify-self: end; }
+    .comunidad__track { padding-inline: var(--space-7); scroll-padding-inline: var(--space-7); gap: var(--space-4); }
+    .comunidad__controls,
+    .comunidad__note { margin-inline: var(--space-7); }
+  }
+  @media (min-width: 64rem) {
+    .post { flex-basis: calc((100% - 3 * var(--space-4)) / 4.3); }
+  }
+</style>

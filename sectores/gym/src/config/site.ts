@@ -83,10 +83,12 @@ export const site = {
   /** Menú principal. En una one-page, los enlaces van a las secciones (#servicios…) */
   nav: [
     { label: 'Clases', href: '/#clases' },
+    { label: 'Hot', href: '/#hot' },
+    { label: 'El estudio', href: '/#estudio' },
     { label: 'Wellness', href: '/#wellness' },
     { label: 'Horario', href: '/#horario' },
     { label: 'Tarifas', href: '/#tarifas' },
-    { label: 'Equipo', href: '/#equipo' },
+    { label: 'You + Brava', href: '/#comunidad' },
     { label: 'Contacto', href: '/#contacto' },
   ],
 

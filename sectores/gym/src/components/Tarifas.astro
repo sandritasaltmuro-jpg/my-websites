@@ -1,0 +1,177 @@
+---
+/**
+ * Tarifas.astro (kit gym · Brava) — Planes y precios (ref. "Membership", SIN negro).
+ * ---------------------------------------------------------------------------
+ * - Fondo rojo intenso. Arriba: etiquetas, H2 y foto de apoyo (12) en franja.
+ * - Cuatro tarjetas en rejilla de líneas finas: nombre (H3), precio grande,
+ *   periodo y qué incluye. "Ilimitado" destacado con resplandor naranja.
+ * - Debajo, precios sueltos de wellness y condiciones en mono.
+ * - Sin botones por ahora (las llamadas a la acción se definirán más adelante).
+ *
+ * Datos: src/data/tarifas.ts. Uso: <Tarifas />
+ * Contraste: crema sobre rojo intenso (7,3:1). En la tarjeta destacada el naranja
+ * queda arriba a la derecha, lejos del texto pequeño (que cae sobre rojo Brava, 5,0:1).
+ */
+import { planes, tarifasNotas } from '../data/tarifas';
+import FilmImage from './FilmImage.astro';
+---
+
+<section id="tarifas" class="tarifas" aria-labelledby="tarifas-title">
+  <div class="tarifas__head">
+    <div class="tarifas__labels" data-reveal="up">
+      <p>06 · Tarifas</p>
+      <p>Sin matrícula</p>
+    </div>
+    <div class="tarifas__intro">
+      <h2 id="tarifas-title" class="tarifas__title" data-reveal="lines">Tu ritmo, tu tarifa.</h2>
+      <div class="tarifas__photo" data-reveal="image">
+        <FilmImage num="12" alt="Mujer con gafas de sol negras y una mancuerna cromada apoyada en el hombro" sizes="(min-width: 64rem) 30vw, 100vw" widths={[480, 800, 1200]} position="center 40%" />
+      </div>
+    </div>
+  </div>
+
+  <ul class="tarifas__grid" role="list">
+    {planes.map((p) => (
+      <li class:list={['plan', { 'plan--featured': p.featured }]} data-reveal="up">
+        {p.featured && <p class="plan__badge">La más elegida</p>}
+        <h3 class="plan__name">{p.name}</h3>
+        <p class="plan__price">
+          {p.price}
+          {p.period && <span class="plan__period">{p.period}</span>}
+        </p>
+        <p class="plan__includes">{p.includes}</p>
+      </li>
+    ))}
+  </ul>
+
+  <ul class="tarifas__notes" role="list" data-reveal="up">
+    {tarifasNotas.map((n) => <li>{n}</li>)}
+  </ul>
+</section>
+
+<style>
+  .tarifas {
+    padding: var(--section-space) var(--space-5);
+    background: var(--brava-red-intense);
+    color: var(--color-text);
+  }
+
+  .tarifas__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .tarifas__labels p,
+  .tarifas__notes,
+  .plan__badge,
+  .plan__name,
+  .plan__period {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tarifas__intro {
+    display: grid;
+    gap: var(--space-6);
+    margin-block: var(--space-7);
+  }
+  .tarifas__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.2rem + 5.5vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .tarifas__photo { aspect-ratio: 16 / 9; }
+  .tarifas__photo :global(.film) { width: 100%; height: 100%; }
+
+  /* ---- Tarjetas: rejilla de líneas finas ---- */
+  .tarifas__grid {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+    border-left: 1px solid var(--color-border);
+  }
+  .plan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .plan__name { font-size: var(--text-sm); }
+  .plan__price {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin: var(--space-4) 0 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.75rem, 2rem + 2.4vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .plan__period { font-size: var(--text-xs); letter-spacing: 0.08em; }
+  .plan__includes {
+    margin: 0;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    line-height: var(--leading-snug);
+  }
+
+  /* Destacada: rojo Brava con resplandor naranja arriba a la derecha (decorativo) */
+  .plan--featured {
+    background:
+      radial-gradient(ellipse 80% 60% at 100% 0%, rgba(211, 128, 46, 0.85) 0%, rgba(210, 76, 48, 0.4) 45%, rgba(210, 76, 48, 0) 75%),
+      var(--brava-red);
+  }
+  /* Etiqueta: negro sobre ámbar (6,1:1) */
+  .plan__badge {
+    align-self: flex-start;
+    padding: 0.125rem var(--space-2);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  .tarifas__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    list-style: none;
+    line-height: var(--leading-normal);
+  }
+
+  /* ---- Tableta: dos por fila ---- */
+  @media (min-width: 40rem) {
+    .tarifas__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .plan { min-height: 16rem; }
+    .plan__price { margin-top: auto; } /* precio abajo, alineado entre tarjetas */
+  }
+  @media (min-width: 48rem) {
+    .tarifas { padding-inline: var(--space-7); }
+  }
+
+  /* ---- Escritorio: título y foto lado a lado; cuatro tarjetas ---- */
+  @media (min-width: 64rem) {
+    .tarifas__intro {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      align-items: end;
+    }
+    .tarifas__photo { aspect-ratio: 4 / 3; }
+    .tarifas__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .plan { min-height: 20rem; padding: var(--space-6); }
+  }
+</style>

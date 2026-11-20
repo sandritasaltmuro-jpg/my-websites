@@ -6,11 +6,11 @@
  *   - Foto 01 a pantalla completa con efecto película, degradado y grano.
  *   - Arriba: etiquetas en mono; en el centro, el H1 en Space Mono.
  *   - Abajo, dividido por líneas finas:
- *       izquierda → mini carrusel de clases (foto, nombre, "Reservar", flechas y puntos)
+ *       izquierda → mini carrusel de clases (foto, nombre, duración, flechas y puntos)
  *       derecha   → entradilla
  *
  * Datos: textos por props (con los del concepto por defecto), clases de src/data/clases.ts
- * y WhatsApp de site.ts. Sin JavaScript el carrusel se puede deslizar igualmente
+ * y coordenadas de site.ts. Sin JavaScript el carrusel se puede deslizar igualmente
  * (scroll horizontal); el script solo añade flechas y puntos.
  *
  * Uso: <Hero />
@@ -19,7 +19,6 @@
  * (--gradient-photo + --gradient-photo-bottom) o sobre borgoña/rojo intenso.
  */
 import { site } from '../config/site';
-import { whatsappUrl } from '../utils/contact';
 import { clases, clasesHot } from '../data/clases';
 import FilmImage from './FilmImage.astro';
 import Icon from './Icon.astro';
@@ -53,7 +52,6 @@ const slides = [...clases, clasesHot[0]].map((c) => ({
   ...c,
   meta: `${c.minutes} min · ${c.level ?? 'Sala a 35–38 °C'}`,
 }));
-const newTab = ' (se abre en una pestaña nueva)';
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -117,14 +115,6 @@ const newTab = ' (se abre en una pestaña nueva)';
                   {c.name}
                 </p>
                 <p class="hero__slide-meta">{c.meta}</p>
-                <a
-                  class="hero__book"
-                  href={whatsappUrl(`Hola, quiero reservar una clase de ${c.name} en ${site.name}.`)}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Reservar<span class="sr-only"> {c.name} por WhatsApp{newTab}</span>
-                </a>
               </div>
             </li>
           ))}
@@ -304,25 +294,6 @@ const newTab = ' (se abre en una pestaña nueva)';
     color: var(--color-muted);
   }
 
-  /* Botón secundario: contorno crema */
-  .hero__book {
-    display: inline-flex;
-    align-items: center;
-    min-height: var(--tap);
-    padding: 0 var(--space-5);
-    border: 1px solid var(--color-text);
-    color: var(--color-text);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
-  }
-  .hero__book:hover {
-    background: var(--color-text);
-    color: var(--brava-red-intense);
-  }
 
   /* Flechas redondas y puntos: solo con JavaScript (sin él, se desliza a mano) */
   .hero__controls,

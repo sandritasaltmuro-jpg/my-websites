@@ -11,6 +11,7 @@
  *   [data-carousel-prev/next]  botones de flecha
  *   [data-carousel-dots]       contenedor de botones-punto (uno por diapositiva)
  *   [data-carousel-count]      texto "01 / 04" (opcional)
+ *   [data-carousel-progress]   barra de progreso (opcional): recibe la variable CSS --progress (0–1)
  *
  * Las diapositivas pueden ser más estrechas que la pista (se ve un trozo de la siguiente).
  */
@@ -30,6 +31,7 @@ export function initCarousels() {
     const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
     const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
     const count = root.querySelector<HTMLElement>('[data-carousel-count]');
+    const progress = root.querySelector<HTMLElement>('[data-carousel-progress]');
     if (!track || slides.length < 2) return;
 
     let current = 0;
@@ -64,6 +66,15 @@ export function initCarousels() {
     prev?.addEventListener('click', () => goTo(current - 1));
     next?.addEventListener('click', () => goTo(current + 1));
     dots.forEach((d, j) => d.addEventListener('click', () => goTo(j)));
-    track.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+    // Barra de progreso: parte vista de la pista (de la primera foto al borde derecho visible)
+    function updateProgress() {
+      if (!progress) return;
+      const seen = (track!.scrollLeft + track!.clientWidth) / track!.scrollWidth;
+      progress.style.setProperty('--progress', String(Math.min(1, seen)));
+    }
+
+    updateProgress();
+    window.addEventListener('resize', updateProgress, { passive: true });
+    track.addEventListener('scroll', () => requestAnimationFrame(() => { update(); updateProgress(); }), { passive: true });
   });
 }

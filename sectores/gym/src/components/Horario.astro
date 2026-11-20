@@ -1,0 +1,209 @@
+---
+/**
+ * Horario.astro (kit gym · Brava) — Horario semanal de clases.
+ * ---------------------------------------------------------------------------
+ * - Cabecera: etiquetas en mono, H2 y horario de apertura (de site.ts) con notas.
+ * - Semana: una columna por día (lunes a sábado) separadas por líneas finas;
+ *   cada clase con su hora en mono. Las clases hot llevan la marca "Hot".
+ * - Escritorio: los seis días a la vista. Tableta: tres por fila.
+ * - Móvil: pestañas por día (empieza en el día de hoy). Sin JavaScript se ven
+ *   todos los días uno debajo de otro.
+ *
+ * Datos: src/data/horario.ts y site.hours. Uso: <Horario />
+ * Fondo: --gradient-section (crema encima ≥ 5:1).
+ */
+import { site } from '../config/site';
+import { semana, horarioNotas } from '../data/horario';
+---
+
+<section id="horario" class="horario" aria-labelledby="horario-title" data-schedule>
+  <div class="horario__head">
+    <div class="horario__labels" data-reveal="up">
+      <p>05 · Horario</p>
+      <p>Semana tipo</p>
+    </div>
+    <h2 id="horario-title" class="horario__title" data-reveal="lines">Elige tu hora.</h2>
+    <div class="horario__info" data-reveal="up">
+      <ul role="list">
+        {site.hours.map((h) => <li>{h.label} · {h.opens}–{h.closes}</li>)}
+        {site.closedLabel && <li>{site.closedLabel}</li>}
+      </ul>
+      <ul role="list">
+        {horarioNotas.map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Pestañas por día: solo en móvil y con JavaScript -->
+  <div class="horario__tabs" aria-label="Elige el día" role="group" data-schedule-tabs>
+    {semana.map((d, i) => (
+      <button type="button" class="horario__tab" aria-controls={`dia-${i}`} aria-pressed={i === 0 ? 'true' : 'false'} data-day={i}>
+        <span aria-hidden="true">{d.short}</span><span class="sr-only">{d.name}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="horario__week">
+    {semana.map((d, i) => (
+      <div id={`dia-${i}`} class:list={['horario__day', { 'is-active': i === 0 }]} data-reveal="up" data-delay={String(i * 0.05)}>
+        <h3 class="horario__dayname">{d.name}</h3>
+        <ol class="horario__list" role="list">
+          {d.sessions.map((s) => (
+            <li class="horario__session">
+              <time class="horario__time">{s.time}</time>
+              <span class="horario__name">{s.name}</span>
+              {s.hot && <span class="horario__hot">Hot</span>}
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Pestañas por día (móvil). Empieza en el día de hoy (domingo → lunes).
+  document.querySelectorAll<HTMLElement>('[data-schedule]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-day]')];
+    const days = [...root.querySelectorAll<HTMLElement>('.horario__day')];
+    if (!tabs.length) return;
+
+    function select(i: number) {
+      tabs.forEach((t, j) => t.setAttribute('aria-pressed', String(j === i)));
+      days.forEach((d, j) => d.classList.toggle('is-active', j === i));
+    }
+
+    tabs.forEach((t, i) => t.addEventListener('click', () => select(i)));
+    const today = new Date().getDay(); // 0 domingo … 6 sábado
+    select(today === 0 ? 0 : today - 1);
+  });
+</script>
+
+<style>
+  .horario {
+    padding: var(--section-space) var(--space-5);
+    background: var(--gradient-section);
+    color: var(--color-text);
+  }
+
+  .horario__head {
+    display: grid;
+    gap: var(--space-5);
+    margin-bottom: var(--space-7);
+  }
+  .horario__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .horario__labels p,
+  .horario__info,
+  .horario__tab,
+  .horario__time,
+  .horario__hot {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .horario__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.2rem + 5.5vw, 6.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .horario__info {
+    display: grid;
+    gap: var(--space-3);
+    line-height: var(--leading-normal);
+  }
+  .horario__info ul { margin: 0; padding: 0; list-style: none; }
+
+  /* ---- Pestañas (móvil) ---- */
+  .horario__tabs { display: none; }
+  .horario__tab {
+    flex: 1;
+    min-height: var(--tap);
+    padding: 0;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .horario__tab + .horario__tab { border-left: 0; }
+  /* Pestaña activa: crema con texto rojo intenso (7,3:1) */
+  .horario__tab[aria-pressed='true'] {
+    background: var(--brava-cream);
+    color: var(--brava-red-intense);
+    border-color: var(--brava-cream);
+  }
+
+  /* ---- Semana ---- */
+  .horario__week {
+    display: grid;
+    border-top: 1px solid var(--color-border);
+  }
+  .horario__day {
+    padding: var(--space-5) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .horario__dayname {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .horario__list { margin: 0; padding: 0; list-style: none; }
+  .horario__session {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr auto;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+    border-top: 1px solid var(--color-border);
+  }
+  .horario__name { font-size: var(--text-base); line-height: var(--leading-snug); }
+  /* Marca "Hot": ámbar con texto negro (6,1:1) */
+  .horario__hot {
+    padding: 0.125rem var(--space-2);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-size: 0.625rem;
+  }
+
+  /* Móvil con JavaScript: pestañas y un solo día a la vista */
+  @media (max-width: 47.99rem) {
+    :global(.js) .horario__tabs { display: flex; margin-bottom: var(--space-5); }
+    :global(.js) .horario__day:not(.is-active) { display: none; }
+    :global(.js) .horario__week { border-top: 0; }
+    :global(.js) .horario__day { padding-top: 0; border-bottom: 0; }
+  }
+
+  /* ---- Tableta: tres días por fila ---- */
+  @media (min-width: 48rem) {
+    .horario { padding-inline: var(--space-7); }
+    .horario__head {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: end;
+    }
+    .horario__labels { grid-column: 1 / -1; }
+    .horario__info { justify-self: end; grid-template-columns: auto auto; column-gap: var(--space-7); }
+    .horario__week { grid-template-columns: repeat(3, minmax(0, 1fr)); border-left: 1px solid var(--color-border); }
+    .horario__day { padding: var(--space-5) var(--space-4); border-right: 1px solid var(--color-border); }
+  }
+
+  /* ---- Escritorio: los seis días ---- */
+  @media (min-width: 72rem) {
+    .horario__week { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .horario__session { grid-template-columns: 1fr auto; row-gap: 0; }
+    .horario__time { grid-column: 1 / -1; }
+  }
+</style>

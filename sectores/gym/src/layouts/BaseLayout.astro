@@ -29,13 +29,14 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
-  /** Ocultar el botón flotante de WhatsApp (por ejemplo, en páginas legales) */
+  /** Botón flotante de WhatsApp. DESACTIVADO por defecto: Brava es una landing de escaparate
+   *  y las llamadas a la acción se definirán más adelante (decisión 20 nov) */
   showWhatsAppFloat?: boolean;
   /** Pantalla de carga (solo primera visita). Desactivar en páginas legales */
   showPreloader?: boolean;
 }
 
-const { showWhatsAppFloat = true, showPreloader = true, ...seo } = Astro.props;
+const { showWhatsAppFloat = false, showPreloader = true, ...seo } = Astro.props;
 ---
 
 <!doctype html>

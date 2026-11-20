@@ -33,6 +33,3 @@ export const servicios: Servicio[] = [
     data: '50 min · 55 € (socias 45 €)',
   },
 ];
-
-/** Mensaje de WhatsApp del botón de la sección */
-export const wellnessMessage = 'Hola, quiero reservar en Wellness';

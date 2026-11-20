@@ -6,8 +6,8 @@
  * - Izquierda: foto de la sauna (06) con rejilla y curva de "temperatura" en SVG,
  *   y debajo dos fotos pequeñas (fisio 07 y spa 08) con su etiqueta en mono.
  * - Derecha: etiquetas, H2, entradilla, los cuatro servicios en filas separadas
- *   por líneas finas (nombre, descripción, duración y precio) y el botón
- *   "Reserva tu sesión" por WhatsApp.
+ *   por líneas finas (nombre, descripción, duración y precio).
+ *   (Sin botón de reserva por ahora: se definirá más adelante.)
  *
  * Datos: src/data/wellness.ts. Uso: <Wellness />
  * Tono más calmado que el resto de la web (ver docs/brava-concepto.md).
@@ -15,10 +15,8 @@
  * Fondo: degradado de calor con el naranja detrás de las fotos (arriba a la izquierda
  * en móvil, abajo a la izquierda en escritorio); el texto cae siempre en la zona roja.
  */
-import { whatsappUrl } from '../utils/contact';
-import { servicios, wellnessMessage } from '../data/wellness';
+import { servicios } from '../data/wellness';
 import FilmImage from './FilmImage.astro';
-import Icon from './Icon.astro';
 ---
 
 <section id="wellness" class="wellness" aria-labelledby="wellness-title">
@@ -77,11 +75,6 @@ import Icon from './Icon.astro';
       ))}
     </ul>
 
-    <a class="wellness__cta" href={whatsappUrl(wellnessMessage)} target="_blank" rel="noopener" data-reveal="up">
-      <Icon name="whatsapp" />
-      <span>Reserva tu sesión</span>
-      <span class="sr-only"> de wellness por WhatsApp (se abre en una pestaña nueva)</span>
-    </a>
   </div>
 </section>
 
@@ -224,23 +217,6 @@ import Icon from './Icon.astro';
   }
   .wellness__text { margin: 0; }
 
-  /* Botón: crema con texto rojo intenso (7,3:1); al pasar, ámbar con texto negro (6,1:1) */
-  .wellness__cta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-3);
-    min-height: 3.5rem;
-    padding: 0 var(--space-6);
-    background: var(--brava-cream);
-    color: var(--brava-red-intense);
-    font-weight: var(--weight-bold);
-    text-decoration: none;
-    transition: background-color var(--duration-base) var(--ease), color var(--duration-base) var(--ease);
-  }
-  .wellness__cta:hover {
-    background: var(--color-accent);
-    color: var(--color-on-accent);
-  }
 
   /* ---- Tableta: filas de servicio en dos columnas (nombre | texto) ---- */
   @media (min-width: 48rem) {

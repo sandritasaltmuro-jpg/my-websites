@@ -1,0 +1,151 @@
+---
+/**
+ * Equipo.astro (kit gym · Brava) — Las entrenadoras (FICTICIAS en el concepto).
+ * ---------------------------------------------------------------------------
+ * - Izquierda: etiquetas, H2 y dos fotos de detalle (10 y 11) sin caras.
+ * - Derecha: índice editorial; cada persona en una fila con número, nombre
+ *   grande (H3), especialidad en mono y una frase.
+ * - Aviso visible de que el equipo es ficticio (proyecto conceptual).
+ *
+ * Datos: src/data/equipo.ts. Uso: <Equipo />
+ * Fondo: --gradient-section con resplandor naranja; el naranja queda detrás
+ * de las fotos (columna izquierda) y el texto pequeño sobre rojo (≥ 5:1).
+ */
+import { site } from '../config/site';
+import { equipo } from '../data/equipo';
+import FilmImage from './FilmImage.astro';
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id="equipo" class="equipo" aria-labelledby="equipo-title">
+  <div class="equipo__side">
+    <div class="equipo__labels" data-reveal="up">
+      <p>07 · Equipo</p>
+      <p>{equipo.length} entrenadoras</p>
+    </div>
+    <h2 id="equipo-title" class="equipo__title" data-reveal="lines">Las que te van a hacer sudar.</h2>
+    <div class="equipo__photos">
+      <div class="equipo__photo" data-reveal="image">
+        <FilmImage num="11" alt="Patada alta congelada en el aire, con mallas y zapatillas negras" sizes="(min-width: 64rem) 20vw, 50vw" widths={[400, 700, 1000]} />
+      </div>
+      <div class="equipo__photo" data-reveal="image" data-delay="0.1">
+        <FilmImage num="10" alt="Mandíbula y cuello con gotas de sudor después de entrenar" sizes="(min-width: 64rem) 20vw, 50vw" widths={[400, 700, 1000]} />
+      </div>
+    </div>
+  </div>
+
+  <div class="equipo__main">
+    <ol class="equipo__list" role="list">
+      {equipo.map((p, i) => (
+        <li class="equipo__person" data-reveal="up">
+          <span class="equipo__num" aria-hidden="true">{pad(i + 1)}</span>
+          <h3 class="equipo__name">{p.name}</h3>
+          <p class="equipo__role">{p.role}</p>
+          <p class="equipo__bio">{p.bio}</p>
+        </li>
+      ))}
+    </ol>
+    {site.noindex && <p class="equipo__note">Equipo ficticio · proyecto conceptual</p>}
+  </div>
+</section>
+
+<style>
+  .equipo {
+    display: grid;
+    gap: var(--space-8);
+    padding: var(--section-space) var(--space-5);
+    background:
+      radial-gradient(ellipse 50% 45% at 0% 100%, rgba(211, 128, 46, 0.7) 0%, rgba(210, 76, 48, 0.35) 45%, rgba(210, 76, 48, 0) 80%),
+      var(--gradient-section);
+    color: var(--color-text);
+  }
+
+  .equipo__side {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .equipo__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .equipo__labels p,
+  .equipo__num,
+  .equipo__role,
+  .equipo__note {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .equipo__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2.5rem, 1.2rem + 4.5vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .equipo__photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .equipo__photo { aspect-ratio: 3 / 4; }
+  .equipo__photo :global(.film) { width: 100%; height: 100%; }
+
+  /* ---- Índice de personas ---- */
+  .equipo__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .equipo__person {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .equipo__num { grid-row: span 3; padding-top: 0.6em; }
+  .equipo__name {
+    margin: 0;
+    font-family: var(--font-title);
+    font-weight: 700;
+    font-size: clamp(2rem, 1.4rem + 2.2vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+  .equipo__bio { margin: 0; max-width: 46ch; }
+  .equipo__note { margin-top: var(--space-4); }
+
+  /* ---- Tableta: nombre a la izquierda, especialidad y frase a la derecha ---- */
+  @media (min-width: 48rem) {
+    .equipo { padding-inline: var(--space-7); }
+    .equipo__person {
+      grid-template-columns: 3rem minmax(0, 2fr) minmax(0, 3fr);
+      align-items: baseline;
+    }
+    .equipo__num { grid-row: span 2; }
+    .equipo__name { grid-row: span 2; }
+  }
+
+  /* ---- Escritorio: columna lateral fija con título y fotos ---- */
+  @media (min-width: 64rem) {
+    .equipo {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      gap: var(--space-9);
+      align-items: start;
+    }
+    .equipo__side { position: sticky; top: calc(var(--header-h) + var(--space-5)); }
+  }
+</style>
