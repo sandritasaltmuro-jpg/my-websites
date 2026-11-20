@@ -4,8 +4,9 @@ Componentes y temas pensados para gimnasios y estudios de entrenamiento.
 Nació copiando `base/` (SEO, datos del negocio, accesibilidad, legales) el 20 nov 2026.
 
 ## Estado
-- **En construcción.** Ahora contiene los componentes genéricos de partida de la base; se rediseñarán
-  para gimnasio con el concepto **Brava Club** (tema `src/themes/brava.css`).
+- **En construcción** con el concepto **Brava Club** (tema `src/themes/brava.css`).
+- Hecho: pie con la marca en puntos animados (`Footer` + `DotWordmark`).
+- Pendiente de rediseño para gym: cabecera (`Header`) y botón flotante de WhatsApp.
 
 ## Componentes previstos
 - Hero editorial

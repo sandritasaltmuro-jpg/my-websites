@@ -4,7 +4,6 @@
  * noindex: no debe aparecer en Google.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/Button.astro';
 import { site } from '../config/site';
 ---
 
@@ -13,7 +12,7 @@ import { site } from '../config/site';
     <p class="not-found__code">404</p>
     <h1>No encontramos esta página</h1>
     <p>Puede que el enlace esté mal escrito o que la página ya no exista.</p>
-    <Button href="/" icon="arrow">Volver al inicio</Button>
+    <p><a href="/">Volver al inicio</a></p>
   </section>
 </BaseLayout>
 

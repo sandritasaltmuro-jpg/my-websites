@@ -1,90 +1,23 @@
 ---
 /**
- * index.astro — Página de inicio de DEMOSTRACIÓN de la base.
- * Muestra todas las secciones comunes con textos de ejemplo.
- * En cada web: cambia los textos, las imágenes y quita lo que no haga falta.
- *
- * SEO: un solo H1 (en el Hero), un H2 por sección, palabra clave en las primeras 100 palabras.
+ * index.astro — Brava Club (concepto del kit gym). EN CONSTRUCCIÓN.
+ * Aquí irán los componentes de gym a medida que se diseñen:
+ * hero editorial, manifiesto, clases, wellness, horario, tarifas, equipo, galería, FAQ y llamada final.
+ * Contenido: claude/concepto-gym-girls.md (proyecto).
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import Section from '../components/Section.astro';
-import Services from '../components/Services.astro';
-import About from '../components/About.astro';
-import Testimonials from '../components/Testimonials.astro';
-import HoursLocation from '../components/HoursLocation.astro';
-import FAQ from '../components/FAQ.astro';
-import Contact from '../components/Contact.astro';
 import { site } from '../config/site';
-import heroImage from '../assets/hero-placeholder.jpg';
-
-const services = [
-  { title: 'Servicio principal', text: 'Qué incluye, para quién es y qué resultado consigue. Dos o tres líneas concretas.', price: 'Desde 25 €', duration: '45 min' },
-  { title: 'Segundo servicio', text: 'Describe el servicio con palabras que usaría el cliente al buscarlo en Google.', price: 'Desde 40 €', duration: '1 h' },
-  { title: 'Tercer servicio', text: 'Mejor datos concretos que adjetivos: duración, precio orientativo, qué incluye.', price: 'Consultar' },
-];
-
-const testimonials = [
-  { quote: 'Opinión real de un cliente, con su permiso. Corta y concreta funciona mejor.', name: 'Laura M.', detail: 'Clienta desde 2024' },
-  { quote: 'Una segunda opinión que hable de otro aspecto: el trato, el resultado, la puntualidad.', name: 'Carlos R.' },
-  { quote: 'Tres opiniones suelen bastar. Se pueden enlazar las reseñas de Google.', name: 'Ana P.', detail: 'Vía Google' },
-];
-
-const faqs = [
-  { question: '¿Hace falta pedir cita?', answer: 'Sí. Puedes pedirla por WhatsApp en un minuto o llamándonos por teléfono.' },
-  { question: '¿Cuánto cuesta el servicio principal?', answer: 'Desde 25 €. El precio final depende de lo que necesites y te lo confirmamos antes de empezar.' },
-  { question: '¿Cómo puedo pagar?', answer: 'Aceptamos tarjeta, efectivo y Bizum.' },
-  { question: '¿Dónde estáis?', answer: `En ${site.address.street}, ${site.address.city}. ${site.address.directions}` },
-];
 ---
 
-<BaseLayout
-  title={`Servicio principal en Zona | ${site.name}`}
-  description={site.description}
->
-  <Hero
-    eyebrow="Servicio principal en Zona"
-    title="Titular claro con la palabra clave principal"
-    text="Entradilla de una o dos frases: qué ofreces, para quién y por qué elegirte. Aquí va también la zona."
-    image={heroImage}
-    imageAlt="Imagen provisional: sustituir por una foto real del negocio"
-    secondaryLabel="Ver servicios"
-    secondaryHref="#servicios"
-  />
-
-  <Section
-    id="servicios"
-    eyebrow="Lo que hacemos"
-    title="Servicios"
-    intro="Una frase que resuma la oferta. Las secciones especiales de cada sector (carta, tarifas, clases) se añaden en cada web."
-    alt
-  >
-    <Services items={services} />
-  </Section>
-
-  <Section id="sobre-nosotros" eyebrow="Quiénes somos" title="Sobre nosotros">
-    <About>
-      <p>
-        La historia del negocio en pocas líneas: desde cuándo, quién está detrás y qué lo hace diferente.
-        Escrito en cercano, como se lo contarías a un cliente en persona.
-      </p>
-      <p>Un segundo párrafo con un dato concreto: años de experiencia, especialidad, forma de trabajar.</p>
-    </About>
-  </Section>
-
-  <Section id="opiniones" eyebrow="Lo que dicen" title="Opiniones de clientes" alt>
-    <Testimonials items={testimonials} />
-  </Section>
-
-  <Section id="horario" eyebrow="Visítanos" title="Horario y ubicación">
-    <HoursLocation />
-  </Section>
-
-  <Section id="preguntas" eyebrow="Dudas" title="Preguntas frecuentes" alt narrow>
-    <FAQ items={faqs} />
-  </Section>
-
-  <Section id="contacto" eyebrow="Hablemos" title="Contacto" narrow>
-    <Contact />
-  </Section>
+<BaseLayout title={`Gimnasio para mujeres en Madrid | ${site.name}`} description={site.description}>
+  <section class="container wip">
+    <h1>Gimnasio para mujeres en Madrid. Entrena brava.</h1>
+    <p>Web en construcción.</p>
+  </section>
 </BaseLayout>
+
+<style>
+  .wip { padding-block: var(--space-9); }
+  .wip h1 { font-family: var(--font-display); font-weight: 400; font-size: var(--text-3xl); text-transform: uppercase; }
+  .wip p { color: var(--color-muted); font-family: var(--font-mono); font-size: var(--text-sm); }
+</style>
